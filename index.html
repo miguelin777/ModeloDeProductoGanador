@@ -12,190 +12,219 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23d0442a'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%23fff'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%23d0442a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23c8402a'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%23fff'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%23c8402a'/%3E%3C/svg%3E">
 <style>[hidden]{display:none!important}html,body{margin:0}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 <title>Tablero de lanzamientos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout: banco de trabajo — visor 3D + controles de lanzamiento a la izquierda; chequeo del cubo, piezas y plano a la derecha; en celular se apila */
+/* Layout: hoja de plano técnico — rótulo arriba (título + cuadro de datos), vista 3D enmarcada con su panel de lanzamiento al lado, y abajo cubo, piezas y plano separados por líneas finas */
 :root{
-  --bg:#f0f1ed; --surface:#ffffff; --fg:#1c201f; --muted:#5c6460; --line:#d8dcd5;
-  --stage:#e3e7e0; --table:#dfe3dc; --mat:#3d4a52; --grid-minor:#a7b0a8; --grid-major:#7a867e;
-  --accent:#d0442a; --accent-ink:#ffffff; --accent-soft:#f6ddd5; --plan-fill:#efe3d1;
-  --ok:#2e7d4f; --ok-soft:#dcefe3; --track:#e7eae4; --wood:#cba57a; --wood-2:#93693f;
-  --stage-hi:#f6f8f4; --rail:#dce0d9;
+  --bg:#f3f2ee; --paper:#fbfaf7; --fg:#1d2021; --muted:#5e6562; --line:#d6d8d1; --line-strong:#a7aca4; --grid-line:#e7e7e1;
+  --stage:#e4e7e1; --stage-hi:#f4f6f2; --mat:#3d4a52;
+  --accent:#c8402a; --accent-ink:#ffffff; --accent-soft:#f5ddd6; --plan-fill:#efe3d1;
+  --ok:#2c7a4c; --ok-soft:#dcefe3; --rail:#d9ddd5; --hover:#eeefea; --wood:#cba57a; --wood-2:#93693f;
   --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
   --f-body:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#121516; --surface:#1a1e1f; --fg:#e5e8e3; --muted:#9aa29d; --line:#2a3032;
-    --stage:#171b1c; --table:#15191a; --mat:#2a3438; --grid-minor:#364043; --grid-major:#53616a;
+    --bg:#121516; --paper:#171b1c; --fg:#e6e8e3; --muted:#9ba29e; --line:#2b3133; --line-strong:#4a5255; --grid-line:#1a1f21;
+    --stage:#171b1c; --stage-hi:#222a2d; --mat:#2a3438;
     --accent:#ff7350; --accent-ink:#1b0c07; --accent-soft:#3b211a; --plan-fill:#3a3128;
-    --ok:#66c690; --ok-soft:#1d3327; --track:#262c2e; --wood:#b8946a; --wood-2:#7f5d3c;
-    --stage-hi:#222a2d; --rail:#323a3d;
+    --ok:#66c690; --ok-soft:#1d3327; --rail:#343c3f; --hover:#1f2527; --wood:#b8946a; --wood-2:#7f5d3c;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#121516; --surface:#1a1e1f; --fg:#e5e8e3; --muted:#9aa29d; --line:#2a3032;
-  --stage:#171b1c; --table:#15191a; --mat:#2a3438; --grid-minor:#364043; --grid-major:#53616a;
+  --bg:#121516; --paper:#171b1c; --fg:#e6e8e3; --muted:#9ba29e; --line:#2b3133; --line-strong:#4a5255; --grid-line:#1a1f21;
+  --stage:#171b1c; --stage-hi:#222a2d; --mat:#2a3438;
   --accent:#ff7350; --accent-ink:#1b0c07; --accent-soft:#3b211a; --plan-fill:#3a3128;
-  --ok:#66c690; --ok-soft:#1d3327; --track:#262c2e; --wood:#b8946a; --wood-2:#7f5d3c;
-  --stage-hi:#222a2d; --rail:#323a3d;
+  --ok:#66c690; --ok-soft:#1d3327; --rail:#343c3f; --hover:#1f2527; --wood:#b8946a; --wood-2:#7f5d3c;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1140px;margin:0 auto;padding-inline:16px;padding-block:22px 48px}
-header{display:grid;gap:6px;margin-bottom:18px;max-width:62ch}
-.eyebrow{font:500 11.5px/1.2 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:0}
-h1{font-family:var(--f-display);font-stretch:78%;font-weight:800;font-size:clamp(30px,7vw,48px);line-height:1;letter-spacing:-.01em;margin:0;text-wrap:balance}
-.lede{margin:2px 0 0;color:var(--muted);font-size:15.5px;max-width:58ch}
-.specs{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
-.specs li{font:12.5px/1 var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-variant-numeric:tabular-nums}
-.specs b{color:var(--fg);font-weight:600}
-.stage-pred{position:absolute;left:10px;top:10px;display:flex;align-items:center;gap:8px;font:500 12px/1 var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:7px 11px;border-radius:999px;pointer-events:none;transition:opacity .2s}
-.stage-pred b{font-weight:600;color:var(--ok)}
-.stage-pred[data-kind="miss"] b{color:var(--accent)}
-.stage-pred.dim{opacity:0}
-@media (max-width:480px){.hint-extra{display:none}}
-.grid{display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}
-@media (min-width:940px){.grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:start}}
+body{background-color:var(--bg);background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:20px 20px;color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:26px 40px}
+
+/* Rótulo */
+.sheet-head{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);align-items:end;padding-bottom:22px;border-bottom:1.5px solid var(--fg);margin-bottom:22px}
+@media (min-width:860px){.sheet-head{grid-template-columns:minmax(0,1fr) 400px}}
+h1{font-family:var(--f-display);font-stretch:72%;font-weight:800;font-size:clamp(42px,10vw,78px);line-height:.9;letter-spacing:-.01em;margin:0 0 12px;text-wrap:balance}
+.lede{margin:0;color:var(--muted);font-size:16px;max-width:50ch}
+.rotulo{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1.5px solid var(--fg);background:var(--paper)}
+.rotulo div{padding:8px 11px;border-right:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);min-width:0}
+.rotulo div:nth-child(2n){border-right:0}
+.rotulo div:nth-last-child(-n+2){border-bottom:0}
+.rotulo dt{font:500 10.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.rotulo dd{margin:3px 0 0;font:600 14px/1.25 var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* Vista y controles */
+.work{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);align-items:start}
+@media (min-width:980px){.work{grid-template-columns:minmax(0,1.65fr) minmax(320px,1fr)}.controls{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}}
 .viewer{min-width:0}
-.stage{position:relative;width:100%;max-width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--stage);background:radial-gradient(120% 90% at 50% 18%,var(--stage-hi) 0%,var(--stage) 72%);border:1px solid var(--line)}
+.view-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 8px;font:500 11.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:1/1;overflow:hidden;background:var(--stage);background:radial-gradient(120% 90% at 50% 18%,var(--stage-hi) 0%,var(--stage) 72%);border:1.5px solid var(--fg);border-radius:2px}
 @media (min-width:620px){.stage{aspect-ratio:4/3}}
 .stage canvas{display:block;width:100%;height:100%;cursor:grab}
 .stage canvas:active{cursor:grabbing}
 .labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.dim{position:absolute;left:0;top:0;font:500 11px/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--fg);background:var(--surface);border:1px solid var(--line);padding:4px 7px;border-radius:999px;white-space:nowrap;will-change:transform}
+.dim{position:absolute;left:0;top:0;font:500 11px/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--fg);background:var(--paper);border:1px solid var(--line-strong);padding:4px 6px;border-radius:2px;white-space:nowrap;will-change:transform}
 .dim.cube{color:var(--accent);border-color:var(--accent)}
-.toast{position:absolute;top:12px;left:50%;max-width:calc(100% - 24px);transform:translate(-50%,-6px);background:var(--fg);color:var(--bg);font:600 13px/1.3 var(--f-mono);padding:8px 14px;border-radius:14px;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
+.stage-pred{position:absolute;left:10px;top:10px;display:flex;align-items:center;gap:7px;font:500 12px/1 var(--f-mono);color:var(--muted);background:var(--paper);border:1px solid var(--line-strong);padding:7px 10px;border-radius:2px;pointer-events:none;transition:opacity .2s}
+.stage-pred b{font-weight:600;color:var(--ok)}
+.stage-pred[data-kind="miss"] b{color:var(--accent)}
+.stage-pred.dim-out{opacity:0}
+.toast{position:absolute;top:12px;left:50%;max-width:calc(100% - 24px);transform:translate(-50%,-6px);background:var(--fg);color:var(--bg);font:600 13px/1.3 var(--f-mono);padding:9px 14px;border-radius:2px;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-.hint{position:absolute;left:10px;bottom:10px;font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:5px 10px;border-radius:999px;pointer-events:none}
+.hint{position:absolute;left:10px;bottom:10px;font-size:12px;color:var(--muted);background:var(--paper);border:1px solid var(--line-strong);padding:6px 9px;border-radius:2px;pointer-events:none}
+@media (max-width:480px){.hint-extra{display:none}}
 .stage-launch{position:absolute;right:10px;bottom:10px}
 .fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted);margin:0}
-.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
-.seg{display:inline-flex;flex-wrap:wrap;padding:3px;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
-.seg button{appearance:none;border:0;background:transparent;color:var(--muted);font:600 14px/1 var(--f-body);padding:9px 13px;border-radius:8px;cursor:pointer}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between;margin-top:12px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1.5px solid var(--fg);border-radius:4px;background:var(--paper);overflow:hidden}
+.seg button{appearance:none;border:0;background:transparent;color:var(--fg);font:600 14px/1 var(--f-body);padding:9px 13px;cursor:pointer}
+.seg button + button{border-left:1.5px solid var(--fg)}
 .seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 .seg.small button{padding:8px 11px;font-size:13px}
-.btn{appearance:none;display:inline-flex;align-items:center;gap:8px;border:0;background:var(--accent);color:var(--accent-ink);font:700 14px/1 var(--f-body);padding:12px 16px;border-radius:11px;cursor:pointer;box-shadow:0 2px 8px -2px var(--accent)}
-.btn svg{flex:none}
+.checks{display:flex;flex-wrap:wrap;gap:8px 16px}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;user-select:none}
+.check input{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin:0;border:1.5px solid var(--fg);border-radius:2px;background:var(--paper);display:inline-grid;place-items:center;cursor:pointer;flex:none}
+.check input::after{content:"";width:8px;height:8px;background:var(--accent);transform:scale(0);transition:transform .12s}
+.check input:checked::after{transform:scale(1)}
+.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;background:var(--accent);color:var(--accent-ink);font:700 14px/1 var(--f-body);padding:12px 16px;border-radius:4px;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
 .btn:disabled{opacity:.6;cursor:progress}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{appearance:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:600 13px/1 var(--f-body);padding:9px 12px;border-radius:999px;cursor:pointer}
-.chip::before{content:"";width:9px;height:9px;border-radius:50%;border:1.5px solid var(--muted)}
-.chip[aria-pressed="true"]::before{background:var(--accent);border-color:var(--accent)}
-.panel{display:grid;gap:12px;margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.panel-head h3{margin:0;font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:18px;line-height:1.1}
-.pred{display:inline-flex;align-items:center;font:600 12.5px/1 var(--f-mono);padding:6px 10px;border-radius:999px;background:var(--track);color:var(--fg)}
-.pred[data-kind="hole"]{background:var(--ok-soft);color:var(--ok)}
-.pred[data-kind="miss"]{background:var(--accent-soft);color:var(--accent)}
-.pred-detail{margin:-6px 0 0;color:var(--muted);font-size:13.5px}
-.row{display:grid;grid-template-columns:6.8em minmax(0,1fr) 4.8em;align-items:center;gap:6px 12px}
+.btn svg{flex:none}
+
+.controls{background:var(--paper);border:1px solid var(--line-strong);border-radius:2px;padding:16px;display:grid;gap:14px;min-width:0}
+.block{display:grid;gap:12px}
+.block + .block{border-top:1px solid var(--line-strong);padding-top:16px}
+.block-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+h3{margin:0;font-family:var(--f-display);font-stretch:80%;font-weight:750;font-size:20px;line-height:1.1}
+.result{display:grid;gap:3px;padding:10px 12px;border-left:3px solid var(--ok);background:var(--ok-soft)}
+.result[data-kind="miss"]{border-left-color:var(--accent);background:var(--accent-soft)}
+.result-label{font:500 10.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.result-value{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:22px;line-height:1.1;color:var(--ok)}
+.result[data-kind="miss"] .result-value{color:var(--accent)}
+.result-detail{margin:0;color:var(--fg);font-size:13.5px}
+.row{display:grid;grid-template-columns:6.6em minmax(0,1fr) 4.8em;align-items:center;gap:2px 12px}
 .row label,.row .lbl{font-weight:650;font-size:14px}
-.row input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;margin:0;background:transparent;cursor:pointer;--p:50%}
-.row input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(to right,var(--accent) var(--p),var(--rail) var(--p))}
-.row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.25)}
-.row input[type=range]::-moz-range-track{height:6px;border-radius:999px;background:var(--rail)}
-.row input[type=range]::-moz-range-progress{height:6px;border-radius:999px;background:var(--accent)}
-.row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .row output{font:600 14px/1 var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
-.row .help{grid-column:2/-1;margin:-2px 0 0;color:var(--muted);font:12px/1.4 var(--f-mono)}
+.row .help{grid-column:2/-1;margin:0;color:var(--muted);font-size:12.5px;line-height:1.4}
 .row .seg{grid-column:2/-1;justify-self:start}
-.panel-foot{display:flex;justify-content:flex-end}
-button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.side{display:grid;gap:28px;min-width:0}
-.sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
-h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;line-height:1.1;margin:0;text-wrap:balance}
-.meta{font:500 12px/1 var(--f-mono);color:var(--muted)}
-.ok-pill{display:inline-flex;align-items:center;gap:6px;font:600 12.5px/1 var(--f-mono);color:var(--ok);background:var(--ok-soft);padding:6px 10px;border-radius:999px}
-.meters{list-style:none;margin:0;padding:14px;display:grid;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.row input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;margin:0;background:transparent;cursor:pointer;--p:50%}
+.row input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:0;background:linear-gradient(to right,var(--accent) var(--p),var(--rail) var(--p))}
+.row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin-top:-6px;border-radius:2px;background:var(--paper);border:2px solid var(--accent)}
+.row input[type=range]::-moz-range-track{height:4px;background:var(--rail)}
+.row input[type=range]::-moz-range-progress{height:4px;background:var(--accent)}
+.row input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:2px;background:var(--paper);border:2px solid var(--accent)}
+.launch-wide{width:100%;padding-block:14px}
+
+/* Abajo */
+.details{display:grid;gap:18px;margin-top:30px;grid-template-columns:minmax(0,1fr);align-items:start}
+@media (min-width:1000px){.details{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.sheet{background:var(--paper);border:1px solid var(--line-strong);border-radius:2px;padding:16px;display:grid;gap:12px;align-content:start;min-width:0}
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-bottom:8px;border-bottom:1.5px solid var(--fg)}
+h2{font-family:var(--f-display);font-stretch:80%;font-weight:750;font-size:21px;line-height:1.1;margin:0;text-wrap:balance}
+.meta{font:500 12px/1.2 var(--f-mono);color:var(--muted)}
+.stamp{font:700 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ok);border:1.5px solid var(--ok);padding:5px 8px;border-radius:2px}
+.meters{list-style:none;margin:0;padding:0;display:grid;gap:16px}
 .m-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px}
 .m-name{font-weight:650;font-size:14px}
 .m-val{font:500 13px/1.2 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--muted);text-align:right}
 .m-val b{color:var(--fg);font-weight:600}
-.bar{display:flex;height:10px;border-radius:999px;background:var(--track);overflow:hidden}
+.bar{display:flex;height:12px;background:var(--rail);border:1px solid var(--line-strong)}
 .bar span{display:block;height:100%}
 .bar .s-cat{background:var(--wood-2)}
 .bar .s-box{background:var(--wood)}
-.bar .s-cat + .s-box{border-left:2px solid var(--surface)}
+.bar .s-cat + .s-box{border-left:2px solid var(--paper)}
 .m-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:7px;font:12px/1.2 var(--f-mono);color:var(--muted)}
-.m-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.m-legend i{display:inline-block;width:9px;height:9px;margin-right:6px;vertical-align:-1px}
 .m-legend .k-cat{background:var(--wood-2)}
 .m-legend .k-box{background:var(--wood)}
-.group-label{margin:16px 0 8px;font:500 11.5px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.group-label:first-of-type{margin-top:0}
-.parts{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.part{appearance:none;width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;text-align:left;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;font:inherit}
+.group-label{margin:4px 0 0;font:500 10.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.parts{list-style:none;margin:0;padding:0;display:grid}
+.parts li + li{border-top:1px solid var(--line)}
+.part{appearance:none;width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;text-align:left;background:transparent;color:var(--fg);border:0;border-radius:2px;margin:2px 0;padding:9px 8px;cursor:pointer}
+.part:hover{background:var(--hover)}
+.part[aria-pressed="true"]{background:var(--accent-soft)}
 .part .name{font-weight:650;font-size:15px}
 .part .dims{grid-column:1;font:12.5px/1.35 var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
 .part .qty{grid-column:2;grid-row:1/span 2;align-self:center;font:600 14px/1 var(--f-mono);color:var(--muted)}
-.part[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .part[aria-pressed="true"] .qty{color:var(--accent)}
 .plan{overflow-x:auto}
-.plan svg{display:block;width:100%;max-width:460px;height:auto}
+.plan svg{display:block;width:100%;max-width:440px;height:auto;margin-inline:auto}
 .cut{fill:var(--plan-fill);stroke:var(--accent);stroke-width:1.6}
-.hole{fill:var(--bg);stroke:var(--accent);stroke-width:1.6;transition:fill .25s}
+.hole{fill:var(--paper);stroke:var(--accent);stroke-width:1.6;transition:fill .25s}
 .hole.aim{stroke-width:3.2;stroke-dasharray:5 4}
 .hole.hit{fill:var(--accent-soft)}
 .dl{stroke:var(--muted);stroke-width:1;fill:none}
 .dt{fill:var(--muted);font:500 11px var(--f-mono)}
 .hn{fill:var(--fg);font:600 14px var(--f-mono)}
 .front{fill:var(--muted);font:500 10.5px var(--f-mono);letter-spacing:.08em}
-.caption{color:var(--muted);font-size:13.5px;margin:8px 0 0;max-width:52ch}
-.note{margin:28px 0 0;color:var(--muted);font-size:13.5px;max-width:70ch}
+.caption{color:var(--muted);font-size:13.5px;margin:0}
+
+.foot{margin-top:30px;padding-top:16px;border-top:1.5px solid var(--fg);display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;color:var(--muted);font-size:13.5px}
+.foot p{margin:0;max-width:72ch}
+.repo{display:inline-flex;align-items:center;gap:8px;color:var(--fg);text-decoration:none;font-weight:650;border:1.5px solid var(--fg);background:var(--paper);padding:9px 13px;border-radius:4px}
+.repo:hover{background:var(--fg);color:var(--bg)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <p class="eyebrow">Proyecto catapulta · corte láser</p>
-    <h1>Tablero de lanzamientos</h1>
-    <p class="lede">La catapulta y la caja de los blancos van separadas; juntas miden 30 × 30 × 22.5 cm y caben en el cubo de 30 cm. Mueve el ángulo, la fuerza y el tamaño de la bolita para ver dónde cae.</p>
-    <ul class="specs" aria-label="Datos del proyecto">
-      <li><b>30 × 30 × 22.5</b> cm armado</li>
-      <li><b>MDF</b> 3 mm</li>
-      <li><b>6</b> hoyos de Ø 6.5 cm</li>
-      <li>catapulta <b>10 × 8 × 3</b> cm</li>
-    </ul>
+<div class="page">
+  <header class="sheet-head">
+    <div>
+      <h1>Tablero de lanzamientos</h1>
+      <p class="lede">La catapulta y la caja de los blancos van separadas y juntas caben en el cubo de 30 cm que nos pidieron. Mueve el ángulo, la fuerza y la bolita para ver dónde cae.</p>
+    </div>
+    <dl class="rotulo" aria-label="Datos del proyecto">
+      <div><dt>Material</dt><dd>MDF 3 mm</dd></div>
+      <div><dt>Unidades</dt><dd>cm</dd></div>
+      <div><dt>Armado</dt><dd>30 × 30 × 22.5</dd></div>
+      <div><dt>Blancos</dt><dd>6 hoyos Ø 6.5</dd></div>
+      <div><dt>Catapulta</dt><dd>10 × 8 × 3</dd></div>
+      <div><dt>Fecha</dt><dd>12/10/2026</dd></div>
+    </dl>
   </header>
 
-  <div class="grid">
+  <div class="work">
     <section class="viewer" aria-label="Modelo 3D">
+      <p class="view-title"><span>Vista 3D</span><span>caja + catapulta</span></p>
       <div class="stage" id="stage">
         <div class="labels" id="labels"></div>
-        <div class="toast" id="toast" role="status" aria-live="polite"></div>
         <div class="stage-pred" id="stagePred" data-kind="hole">Predicción <b id="stagePredText">…</b></div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
         <div class="hint" id="hint">Arrastra para girar<span class="hint-extra"> · toca una pieza</span></div>
         <button type="button" class="btn stage-launch" id="launch"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 13C3.4 6.6 7.6 3.2 13 3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.4 1.6 13.2 3.6 11.2 6.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Lanzar</span></button>
-        <p class="fallback" id="fallback" hidden>No se pudo cargar el visor 3D en este navegador. La predicción, el chequeo del cubo y las piezas siguen funcionando abajo.</p>
+        <p class="fallback" id="fallback" hidden>No se pudo cargar el visor 3D en este navegador. La predicción, el chequeo del cubo y las piezas siguen funcionando.</p>
       </div>
-
       <div class="toolbar">
         <div class="seg" role="group" aria-label="Vista">
           <button type="button" id="vArmado" data-explode="0" aria-pressed="true">Armado</button>
           <button type="button" id="vPiezas" data-explode="1" aria-pressed="false">Piezas separadas</button>
         </div>
-        <div class="chips">
-          <button type="button" class="chip" id="tCube" aria-pressed="true">Cubo 30 cm</button>
-          <button type="button" class="chip" id="tCat" aria-pressed="true">Catapulta</button>
-          <button type="button" class="chip" id="tPath" aria-pressed="true">Trayectoria</button>
-          <button type="button" class="chip" id="tDims" aria-pressed="true">Medidas</button>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="tCube" checked>Cubo 30 cm</label>
+          <label class="check"><input type="checkbox" id="tCat" checked>Catapulta</label>
+          <label class="check"><input type="checkbox" id="tPath" checked>Trayectoria</label>
+          <label class="check"><input type="checkbox" id="tDims" checked>Medidas</label>
         </div>
       </div>
+    </section>
 
-      <div class="panel" aria-labelledby="launchTitle">
-        <div class="panel-head">
-          <h3 id="launchTitle">Lanzamiento</h3>
-          <span class="pred" id="pred" data-kind="hole">…</span>
+    <div class="controls">
+      <section class="block" aria-labelledby="launchTitle">
+        <div class="block-head"><h3 id="launchTitle">Lanzamiento</h3></div>
+        <div class="result" id="pred" data-kind="hole">
+          <span class="result-label">Resultado previsto</span>
+          <span class="result-value" id="predValue">…</span>
+          <p class="result-detail" id="predDetail"></p>
         </div>
-        <p class="pred-detail" id="predDetail"></p>
         <div class="row">
           <label for="alpha">Ángulo</label>
           <input type="range" id="alpha" min="20" max="85" step="1" value="60">
@@ -229,106 +258,109 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
             <button type="button" data-col="-1" aria-pressed="false">Derecha</button>
           </div>
         </div>
-        <div class="panel-foot"><button type="button" class="btn" id="launch2"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 13C3.4 6.6 7.6 3.2 13 3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.4 1.6 13.2 3.6 11.2 6.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Lanzar pelota</span></button></div>
-      </div>
+        <button type="button" class="btn launch-wide" id="launch2"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 13C3.4 6.6 7.6 3.2 13 3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.4 1.6 13.2 3.6 11.2 6.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Lanzar pelota</span></button>
+      </section>
 
-      <div class="panel" aria-labelledby="plateTitle">
-        <div class="panel-head"><h3 id="plateTitle">Tablero</h3></div>
+      <section class="block" aria-labelledby="plateTitle">
+        <div class="block-head"><h3 id="plateTitle">Tablero</h3></div>
         <div class="row">
           <label for="angle">Inclinación</label>
           <input type="range" id="angle" min="9.5" max="38" step="0.5" value="25">
           <output id="angleOut" for="angle">25°</output>
           <p class="help" id="plateInfo"></p>
         </div>
-      </div>
-    </section>
-
-    <aside class="side">
-      <section aria-labelledby="fitTitle">
-        <div class="sec-head">
-          <h2 id="fitTitle">Cabe en el cubo de 30 cm</h2>
-          <span class="ok-pill"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cumple</span>
-        </div>
-        <ul class="meters">
-          <li>
-            <div class="m-top"><span class="m-name">Largo</span><span class="m-val">8 + 22 = <b>30</b> / 30 cm</span></div>
-            <div class="bar" role="img" aria-label="Largo: catapulta 8 cm más caja 22 cm, 30 de 30 cm"><span class="s-cat" style="width:26.667%"></span><span class="s-box" style="width:73.333%"></span></div>
-            <div class="m-legend"><span><i class="k-cat"></i>catapulta 8</span><span><i class="k-box"></i>caja 22</span></div>
-          </li>
-          <li>
-            <div class="m-top"><span class="m-name">Ancho</span><span class="m-val"><b>30</b> / 30 cm</span></div>
-            <div class="bar" role="img" aria-label="Ancho: caja 30 de 30 cm"><span class="s-box" style="width:100%"></span></div>
-            <div class="m-legend"><span>la catapulta (10 cm) queda dentro</span></div>
-          </li>
-          <li>
-            <div class="m-top"><span class="m-name">Alto</span><span class="m-val"><b>22.5</b> / 30 cm</span></div>
-            <div class="bar" role="img" aria-label="Alto: respaldo 22.5 de 30 cm"><span class="s-box" style="width:75%"></span></div>
-            <div class="m-legend"><span>sobran 7.5 cm</span></div>
-          </li>
-        </ul>
       </section>
-
-      <section>
-        <div class="sec-head">
-          <h2>Piezas</h2>
-          <span class="meta">MDF 3 mm · medidas exteriores</span>
-        </div>
-        <p class="group-label">Caja de los blancos · 6 piezas</p>
-        <ul class="parts">
-          <li><button type="button" class="part" data-part="tablero" aria-pressed="false"><span class="name">Tablero con hoyos</span><span class="dims">30 × 22 cm · 6 hoyos Ø 6.5 cm</span><span class="qty">×1</span></button></li>
-          <li><button type="button" class="part" data-part="base" aria-pressed="false"><span class="name">Base</span><span class="dims">30 × 22 cm</span><span class="qty">×1</span></button></li>
-          <li><button type="button" class="part" data-part="frente" aria-pressed="false"><span class="name">Frente</span><span class="dims">30 × 4.5 cm</span><span class="qty">×1</span></button></li>
-          <li><button type="button" class="part" data-part="respaldo" aria-pressed="false"><span class="name">Respaldo</span><span class="dims">30 × 22.5 cm · agarradera 10 × 3 cm</span><span class="qty">×1</span></button></li>
-          <li><button type="button" class="part" data-part="laterales" aria-pressed="false"><span class="name">Laterales (triángulo recto)</span><span class="dims">22 cm de largo · 4.5 cm adelante → 22.5 cm atrás</span><span class="qty">×2</span></button></li>
-        </ul>
-        <p class="group-label">Catapulta · va aparte</p>
-        <ul class="parts">
-          <li><button type="button" class="part" data-part="catapulta" aria-pressed="false"><span class="name">Cuerpo de la catapulta</span><span class="dims">10 × 8 × 3 cm · el brazo es de referencia</span><span class="qty">×1</span></button></li>
-        </ul>
-      </section>
-
-      <section>
-        <div class="sec-head">
-          <h2>Plano del tablero</h2>
-          <span class="meta">cm · a centros</span>
-        </div>
-        <div class="plan">
-          <svg viewBox="0 0 390 330" role="img" aria-label="Tablero de 30 por 22 centímetros con seis hoyos de 6.5 centímetros en dos filas de tres">
-            <path class="dl" d="M50 18v12M350 18v12M50 24H350"/>
-            <text class="dt" x="200" y="14" text-anchor="middle">30 cm</text>
-            <path class="dl" d="M362 40h12M362 260h12M368 40V260"/>
-            <text class="dt" x="384" y="150" text-anchor="middle" transform="rotate(-90 384 150)">22 cm</text>
-            <path class="dl" d="M50 276v12M108.75 276v12M200 276v12M291.25 276v12M350 276v12M50 282H350"/>
-            <text class="dt" x="79.4" y="300" text-anchor="middle">5.875</text>
-            <text class="dt" x="154.4" y="300" text-anchor="middle">9.125</text>
-            <text class="dt" x="245.6" y="300" text-anchor="middle">9.125</text>
-            <text class="dt" x="320.6" y="300" text-anchor="middle">5.875</text>
-            <path class="dl" d="M24 40h12M24 102.5h12M24 197.5h12M24 260h12M30 40V260"/>
-            <text class="dt" x="21" y="71.25" text-anchor="middle" transform="rotate(-90 21 71.25)">6.25</text>
-            <text class="dt" x="21" y="150" text-anchor="middle" transform="rotate(-90 21 150)">9.5</text>
-            <text class="dt" x="21" y="228.75" text-anchor="middle" transform="rotate(-90 21 228.75)">6.25</text>
-            <rect class="cut" x="50" y="40" width="300" height="220"/>
-            <circle class="hole" data-hole="4" cx="108.75" cy="102.5" r="32.5"/>
-            <circle class="hole" data-hole="5" cx="200" cy="102.5" r="32.5"/>
-            <circle class="hole" data-hole="6" cx="291.25" cy="102.5" r="32.5"/>
-            <circle class="hole" data-hole="1" cx="108.75" cy="197.5" r="32.5"/>
-            <circle class="hole" data-hole="2" cx="200" cy="197.5" r="32.5"/>
-            <circle class="hole" data-hole="3" cx="291.25" cy="197.5" r="32.5"/>
-            <text class="hn" x="108.75" y="107.5" text-anchor="middle">4</text>
-            <text class="hn" x="200" y="107.5" text-anchor="middle">5</text>
-            <text class="hn" x="291.25" y="107.5" text-anchor="middle">6</text>
-            <text class="hn" x="108.75" y="202.5" text-anchor="middle">1</text>
-            <text class="hn" x="200" y="202.5" text-anchor="middle">2</text>
-            <text class="hn" x="291.25" y="202.5" text-anchor="middle">3</text>
-            <text class="front" x="200" y="322" text-anchor="middle">FRENTE · LADO DE LA CATAPULTA</text>
-          </svg>
-        </div>
-        <p class="caption">Hoyos de Ø 6.5 cm. Entre hoyo y hoyo quedan 2.6 cm a lo largo y 3 cm a lo ancho, igual que hacia las orillas. El contorno punteado marca el hoyo al que va la bolita.</p>
-      </section>
-    </aside>
+    </div>
   </div>
 
-  <p class="note">Las medidas son exteriores, en MDF de 3 mm; las pestañas y uniones van como en su archivo de LightBurn. La simulación es aproximada: no toma en cuenta el aire, los rebotes ni el peso de la bolita.</p>
+  <div class="details">
+    <section class="sheet" aria-labelledby="fitTitle">
+      <div class="sec-title">
+        <h2 id="fitTitle">Cubo de 30 cm</h2>
+        <span class="stamp">Cumple</span>
+      </div>
+      <ul class="meters">
+        <li>
+          <div class="m-top"><span class="m-name">Largo</span><span class="m-val">8 + 22 = <b>30</b> / 30 cm</span></div>
+          <div class="bar" role="img" aria-label="Largo: catapulta 8 cm más caja 22 cm, 30 de 30 cm"><span class="s-cat" style="width:26.667%"></span><span class="s-box" style="width:73.333%"></span></div>
+          <div class="m-legend"><span><i class="k-cat"></i>catapulta 8</span><span><i class="k-box"></i>caja 22</span></div>
+        </li>
+        <li>
+          <div class="m-top"><span class="m-name">Ancho</span><span class="m-val"><b>30</b> / 30 cm</span></div>
+          <div class="bar" role="img" aria-label="Ancho: caja 30 de 30 cm"><span class="s-box" style="width:100%"></span></div>
+          <div class="m-legend"><span>la catapulta (10 cm) queda dentro</span></div>
+        </li>
+        <li>
+          <div class="m-top"><span class="m-name">Alto</span><span class="m-val"><b>22.5</b> / 30 cm</span></div>
+          <div class="bar" role="img" aria-label="Alto: respaldo 22.5 de 30 cm"><span class="s-box" style="width:75%"></span></div>
+          <div class="m-legend"><span>lo más alto es el respaldo; sobran 7.5 cm</span></div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="sheet" aria-labelledby="partsTitle">
+      <div class="sec-title">
+        <h2 id="partsTitle">Lista de piezas</h2>
+        <span class="meta">medidas exteriores</span>
+      </div>
+      <p class="group-label">Caja de los blancos · 6 piezas</p>
+      <ul class="parts">
+        <li><button type="button" class="part" data-part="tablero" aria-pressed="false"><span class="name">Tablero con hoyos</span><span class="dims">30 × 22 cm · 6 hoyos Ø 6.5 cm</span><span class="qty">×1</span></button></li>
+        <li><button type="button" class="part" data-part="base" aria-pressed="false"><span class="name">Base</span><span class="dims">30 × 22 cm</span><span class="qty">×1</span></button></li>
+        <li><button type="button" class="part" data-part="frente" aria-pressed="false"><span class="name">Frente</span><span class="dims">30 cm de ancho · 4.5 cm de alto</span><span class="qty">×1</span></button></li>
+        <li><button type="button" class="part" data-part="respaldo" aria-pressed="false"><span class="name">Respaldo</span><span class="dims">30 cm de ancho · 22.5 cm de alto · agarradera 10 × 3 cm</span><span class="qty">×1</span></button></li>
+        <li><button type="button" class="part" data-part="laterales" aria-pressed="false"><span class="name">Laterales (triángulo recto)</span><span class="dims" id="dimLat"></span><span class="qty">×2</span></button></li>
+      </ul>
+      <p class="group-label">Catapulta · va aparte</p>
+      <ul class="parts">
+        <li><button type="button" class="part" data-part="catapulta" aria-pressed="false"><span class="name">Cuerpo de la catapulta</span><span class="dims">10 × 8 × 3 cm · el brazo es de referencia</span><span class="qty">×1</span></button></li>
+      </ul>
+    </section>
+
+    <section class="sheet" aria-labelledby="planTitle">
+      <div class="sec-title">
+        <h2 id="planTitle">Plano del tablero</h2>
+        <span class="meta">cm · a centros</span>
+      </div>
+      <div class="plan">
+        <svg viewBox="0 0 390 330" role="img" aria-label="Tablero de 30 por 22 centímetros con seis hoyos de 6.5 centímetros en dos filas de tres">
+          <path class="dl" d="M50 18v12M350 18v12M50 24H350"/>
+          <text class="dt" x="200" y="14" text-anchor="middle">30 cm</text>
+          <path class="dl" d="M362 40h12M362 260h12M368 40V260"/>
+          <text class="dt" x="384" y="150" text-anchor="middle" transform="rotate(-90 384 150)">22 cm</text>
+          <path class="dl" d="M50 276v12M108.75 276v12M200 276v12M291.25 276v12M350 276v12M50 282H350"/>
+          <text class="dt" x="79.4" y="300" text-anchor="middle">5.875</text>
+          <text class="dt" x="154.4" y="300" text-anchor="middle">9.125</text>
+          <text class="dt" x="245.6" y="300" text-anchor="middle">9.125</text>
+          <text class="dt" x="320.6" y="300" text-anchor="middle">5.875</text>
+          <path class="dl" d="M24 40h12M24 102.5h12M24 197.5h12M24 260h12M30 40V260"/>
+          <text class="dt" x="21" y="71.25" text-anchor="middle" transform="rotate(-90 21 71.25)">6.25</text>
+          <text class="dt" x="21" y="150" text-anchor="middle" transform="rotate(-90 21 150)">9.5</text>
+          <text class="dt" x="21" y="228.75" text-anchor="middle" transform="rotate(-90 21 228.75)">6.25</text>
+          <rect class="cut" x="50" y="40" width="300" height="220"/>
+          <circle class="hole" data-hole="4" cx="108.75" cy="102.5" r="32.5"/>
+          <circle class="hole" data-hole="5" cx="200" cy="102.5" r="32.5"/>
+          <circle class="hole" data-hole="6" cx="291.25" cy="102.5" r="32.5"/>
+          <circle class="hole" data-hole="1" cx="108.75" cy="197.5" r="32.5"/>
+          <circle class="hole" data-hole="2" cx="200" cy="197.5" r="32.5"/>
+          <circle class="hole" data-hole="3" cx="291.25" cy="197.5" r="32.5"/>
+          <text class="hn" x="108.75" y="107.5" text-anchor="middle">4</text>
+          <text class="hn" x="200" y="107.5" text-anchor="middle">5</text>
+          <text class="hn" x="291.25" y="107.5" text-anchor="middle">6</text>
+          <text class="hn" x="108.75" y="202.5" text-anchor="middle">1</text>
+          <text class="hn" x="200" y="202.5" text-anchor="middle">2</text>
+          <text class="hn" x="291.25" y="202.5" text-anchor="middle">3</text>
+          <text class="front" x="200" y="322" text-anchor="middle">FRENTE · LADO DE LA CATAPULTA</text>
+        </svg>
+      </div>
+      <p class="caption">Hoyos de Ø 6.5 cm. Entre hoyo y hoyo quedan 2.6 cm a lo largo y 3 cm a lo ancho, igual que hacia las orillas. El contorno punteado marca el hoyo al que va la bolita.</p>
+    </section>
+  </div>
+
+  <footer class="foot">
+    <p>Medidas exteriores en MDF de 3 mm; las pestañas y uniones van como en el archivo de LightBurn. La simulación es aproximada: no toma en cuenta el aire, los rebotes ni el peso de la bolita.</p>
+    <a class="repo" href="https://github.com/miguelin777/ModeloDeProductoGanador" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Código en GitHub</a>
+  </footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -355,8 +387,9 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   const speedIn = $('#speed'), speedOut = $('#speedOut');
   const ballIn = $('#ballD'), ballOut = $('#ballOut');
   const angleIn = $('#angle'), angleOut = $('#angleOut'), plateInfoEl = $('#plateInfo');
-  const predEl = $('#pred'), predDetail = $('#predDetail');
+  const predEl = $('#pred'), predValue = $('#predValue'), predDetail = $('#predDetail');
   const stagePred = $('#stagePred'), stagePredText = $('#stagePredText');
+  const dimLat = $('#dimLat');
   const sliders = [alphaIn, speedIn, ballIn, angleIn];
   const ballBtns = document.querySelectorAll('[data-ball]'), colBtns = document.querySelectorAll('[data-col]');
   const holeEls = document.querySelectorAll('.hole');
@@ -526,13 +559,15 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
     ballBtns.forEach((b) => b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.ball - +ballIn.value) < 0.05)));
     colBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.col === state.col)));
     angleOut.textContent = fmt(+angleIn.value) + '°';
-    const topY = HF + D * Math.sin(state.theta) + T * Math.cos(state.theta);
-    const gap = D - T - D * Math.cos(state.theta);
+    const run = D * Math.cos(state.theta), backH = HF + D * Math.sin(state.theta);
+    const topY = backH + T * Math.cos(state.theta);
+    const gap = D - T - run;
     plateInfoEl.textContent = gap < 0.05
       ? 'El tablero llega justo al respaldo, a ' + fmt(topY) + ' cm de alto.'
       : 'El tablero termina a ' + fmt(topY) + ' cm de alto y deja ' + fmt(gap) + ' cm libres antes del respaldo.';
+    dimLat.textContent = fmt(run) + ' cm de largo · ' + fmt(HF) + ' cm adelante → ' + fmt(backH) + ' cm atrás, siguiendo el tablero';
     sim = simulate(state);
-    predEl.textContent = sim.short;
+    predValue.textContent = sim.short;
     predEl.dataset.kind = sim.hole ? 'hole' : 'miss';
     predDetail.textContent = sim.text;
     stagePredText.textContent = sim.short;
@@ -541,7 +576,7 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
     holeEls.forEach((c) => c.classList.toggle('aim', !!sim.hole && +c.dataset.hole === sim.hole.n));
     hooks.forEach((fn) => fn());
   }
-  [alphaIn, speedIn, ballIn, angleIn].forEach((el) => el.addEventListener('input', refresh));
+  sliders.forEach((el) => el.addEventListener('input', refresh));
   ballBtns.forEach((b) => b.addEventListener('click', () => { ballIn.value = b.dataset.ball; refresh(); }));
   colBtns.forEach((b) => b.addEventListener('click', () => { state.col = b.dataset.col; refresh(); }));
   refresh();
@@ -565,7 +600,7 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   stage.insertBefore(canvas, stage.firstChild);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(36, 1, 1, 800);
+  const camera = new THREE.PerspectiveCamera(36, 1, 1, 900);
   const target = new THREE.Vector3(0, 10, -4);
   camera.position.set(target.x + 34, target.y + 52, target.z - 71);
   const controls = new THREE.OrbitControls(camera, canvas);
@@ -588,33 +623,33 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   sun.shadow.bias = -0.0006;
   scene.add(sun);
 
-  // Mesa y tapete de corte con cuadrícula de 1 cm
-  const tableMat = new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 });
-  const table = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), tableMat);
-  table.rotation.x = -Math.PI / 2;
-  table.position.y = -0.26;
-  table.receiveShadow = true;
-  scene.add(table);
-  const MAT_W = 64, MAT_D = 60, MAT_Z = -6, MPX = 20;
-  const matCanvas = document.createElement('canvas');
-  matCanvas.width = MAT_W * MPX; matCanvas.height = MAT_D * MPX;
-  const matTex = new THREE.CanvasTexture(matCanvas);
-  matTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  const matTopMat = new THREE.MeshStandardMaterial({ map: matTex, roughness: 0.95, metalness: 0 });
-  const matSideMat = new THREE.MeshStandardMaterial({ color: 0x2b353b, roughness: 0.95 });
-  const cutMat = new THREE.Mesh(new THREE.BoxGeometry(MAT_W, 0.25, MAT_D), [matSideMat, matSideMat, matTopMat, matSideMat, matSideMat, matSideMat]);
-  cutMat.position.set(0, -0.135, MAT_Z);
-  cutMat.receiveShadow = true;
-  scene.add(cutMat);
+  // Tapete de corte: cuadrícula de 1 cm con líneas más marcadas cada 5 y 10 cm
+  const maxAniso = renderer.capabilities.getMaxAnisotropy();
+  const tileCanvas = document.createElement('canvas');
+  tileCanvas.width = tileCanvas.height = 200;
+  const matTex = new THREE.CanvasTexture(tileCanvas);
+  matTex.wrapS = matTex.wrapT = THREE.RepeatWrapping;
+  matTex.repeat.set(60, 60);
+  matTex.anisotropy = maxAniso;
   function drawMat(base) {
-    const g = matCanvas.getContext('2d'), w = matCanvas.width, h = matCanvas.height;
+    const g = tileCanvas.getContext('2d'), w = 200, px = 20;
     g.fillStyle = base;
-    g.fillRect(0, 0, w, h);
-    const line = (x0, y0, x1, y1, a, lw) => { g.strokeStyle = 'rgba(232,240,236,' + a + ')'; g.lineWidth = lw; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); };
-    for (let i = 0; i <= MAT_W; i++) { const k = i % 10 === 0 ? 2 : i % 5 === 0 ? 1 : 0; line(i * MPX, 0, i * MPX, h, [0.1, 0.22, 0.38][k], [1, 1.5, 2][k]); }
-    for (let j = 0; j <= MAT_D; j++) { const k = j % 10 === 0 ? 2 : j % 5 === 0 ? 1 : 0; line(0, j * MPX, w, j * MPX, [0.1, 0.22, 0.38][k], [1, 1.5, 2][k]); }
+    g.fillRect(0, 0, w, w);
+    const line = (p, a, lw) => {
+      g.strokeStyle = 'rgba(232,240,236,' + a + ')';
+      g.lineWidth = lw;
+      g.beginPath(); g.moveTo(p, 0); g.lineTo(p, w); g.moveTo(0, p); g.lineTo(w, p); g.stroke();
+    };
+    for (let i = 1; i < 10; i++) line(i * px, i === 5 ? 0.22 : 0.1, i === 5 ? 1.5 : 1);
+    line(0, 0.38, 2); line(w, 0.38, 2);
     matTex.needsUpdate = true;
   }
+  const matTopMat = new THREE.MeshStandardMaterial({ map: matTex, roughness: 0.95, metalness: 0 });
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), matTopMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -0.01;
+  ground.receiveShadow = true;
+  scene.add(ground);
 
   function flatPlate(w, d, holes) {
     const s = new THREE.Shape();
@@ -637,9 +672,11 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
     }
     return new THREE.ExtrudeGeometry(s, { depth: T, bevelEnabled: false, curveSegments: 24 });
   }
-  function sideGeo() {
+  // Lateral: triángulo recto que sigue la diagonal del tablero (no llega al respaldo)
+  function sideGeo(th) {
+    const run = D * Math.cos(th), hb = HF + D * Math.sin(th);
     const s = new THREE.Shape();
-    s.moveTo(0, 0); s.lineTo(D, 0); s.lineTo(D, HB); s.lineTo(0, HF); s.closePath();
+    s.moveTo(0, 0); s.lineTo(run, 0); s.lineTo(run, hb); s.lineTo(0, HF); s.closePath();
     const g = new THREE.ExtrudeGeometry(s, { depth: T, bevelEnabled: false });
     g.rotateY(-Math.PI / 2);
     return g;
@@ -649,7 +686,6 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   const accent = new THREE.Color('#d0442a');
   const edgeMat = new THREE.MeshStandardMaterial({ color: 0x4a2e1c, roughness: 0.9 });
   // MDF: ruido fino y fibras; el tablero lleva los números grabados
-  const maxAniso = renderer.capabilities.getMaxAnisotropy();
   function paintMdf(c, density) {
     const g = c.getContext('2d'), w = c.width, h = c.height, img = g.createImageData(w, h);
     for (let i = 0; i < w * h; i++) {
@@ -741,9 +777,10 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   mesh(pRes, panelGeo(W - 2 * T, HB, { a: 3.5, r: 1.5, cy: HB - 3.5 }), resMove).position.set(0, 0, D / 2 - T);
   const pLat = part('laterales');
   const latR = sub(pLat, [10, 0, 0]), latL = sub(pLat, [-10, 0, 0]);
-  const sGeo = sideGeo();
-  mesh(pLat, sGeo, latR).position.set(W / 2, 0, -D / 2);
-  mesh(pLat, sGeo, latL).position.set(-W / 2 + T, 0, -D / 2);
+  let sGeo = sideGeo(state.theta), sTheta = state.theta;
+  const wR = mesh(pLat, sGeo, latR), wL = mesh(pLat, sGeo, latL);
+  wR.position.set(W / 2, 0, -D / 2);
+  wL.position.set(-W / 2 + T, 0, -D / 2);
 
   // Catapulta
   const catTex = mdfTex.clone();
@@ -834,7 +871,7 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   function seatBall() { ball.scale.setScalar(state.r); ball.position.set(0, ballY(state.r), 0); }
   seatBall();
 
-  // Anillo al caer y anillo del hoyo apuntado
+  // Anillo al caer, anillo del hoyo apuntado y chispas
   const ringMat = new THREE.MeshBasicMaterial({ color: 0xd0442a, transparent: true, opacity: 0, depthWrite: false });
   const ring = new THREE.Mesh(new THREE.TorusGeometry(RH + 0.15, 0.22, 10, 72), ringMat);
   ring.rotation.x = -Math.PI / 2;
@@ -844,6 +881,34 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   const aimRing = new THREE.Mesh(new THREE.TorusGeometry(RH + 0.05, 0.12, 8, 72), aimMat);
   aimRing.rotation.x = -Math.PI / 2;
   tilt.add(aimRing);
+  const sparkMat = new THREE.MeshBasicMaterial({ color: 0xd0442a, transparent: true, opacity: 0, depthWrite: false });
+  const sparkGeo = new THREE.SphereGeometry(0.3, 8, 6);
+  const sparks = [];
+  for (let i = 0; i < 16; i++) {
+    const m = new THREE.Mesh(sparkGeo, sparkMat);
+    m.visible = false;
+    scene.add(m);
+    sparks.push({ m: m, v: new THREE.Vector3() });
+  }
+  let sparkT0 = null;
+  function burst(at) {
+    if (reduceMotion) return;
+    sparks.forEach((s, i) => {
+      const a = (i / sparks.length) * Math.PI * 2 + Math.random() * 0.4, sp = 6 + Math.random() * 6;
+      s.m.position.copy(at);
+      s.v.set(Math.cos(a) * sp, 16 + Math.random() * 10, Math.sin(a) * sp);
+      s.m.visible = true;
+    });
+    sparkMat.opacity = 1;
+    sparkT0 = performance.now();
+  }
+  function stepSparks(now, dt) {
+    if (sparkT0 === null) return;
+    const k = (now - sparkT0) / 1000;
+    if (k > 0.9) { sparks.forEach((s) => { s.m.visible = false; }); sparkT0 = null; return; }
+    sparkMat.opacity = 1 - k / 0.9;
+    sparks.forEach((s) => { s.v.y -= 45 * dt; s.m.position.addScaledVector(s.v, dt); });
+  }
 
   // Trayectoria prevista
   const pathMat = new THREE.LineDashedMaterial({ color: 0xd0442a, dashSize: 0.9, gapSize: 0.6, transparent: true, opacity: 0.95 });
@@ -862,9 +927,10 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   cubeLines.computeLineDistances();
   cubeGroup.add(cubeLines);
 
-  // Cotas
-  const anchors = [];
+  // Cotas: línea con remates y una etiqueta que dice qué se mide
+  const anchors = [], dimLines = [];
   let showDims = true, showCube = true, showPath = true;
+  const dimMat = new THREE.LineBasicMaterial({ color: 0xf3eee5, transparent: true, opacity: 0.9 });
   function addLabel(text, parent, x, y, z, kind) {
     const o = new THREE.Object3D();
     o.position.set(x, y, z);
@@ -876,18 +942,29 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
     labelsEl.appendChild(el);
     anchors.push({ o: o, el: el, vis: false, kind: kind });
   }
-  addLabel('Ø 6.5 cm', tilt, HOLES[0].x, T + 0.3, HOLES[0].z, 'dims');
-  addLabel('4.5 cm', frenteMove, W / 2 + 1.9, HF / 2, -D / 2, 'dims');
-  addLabel('22.5 cm', resMove, W / 2 + 2.2, HB / 2, D / 2, 'dims');
-  addLabel('30 cm', resMove, 0, HB + 1.3, D / 2, 'dims');
-  addLabel('22 cm', latR, W / 2 + 2, 0.2, 0, 'dims');
-  addLabel('8 cm', cat, CAT_W / 2 + 1.8, 0.2, 0, 'dims');
+  function dimension(parent, a, b, tick, text) {
+    const A = new THREE.Vector3(a[0], a[1], a[2]), B = new THREE.Vector3(b[0], b[1], b[2]);
+    const tk = new THREE.Vector3(tick[0], tick[1], tick[2]).multiplyScalar(0.7);
+    const geo = new THREE.BufferGeometry().setFromPoints([A, B, A.clone().add(tk), A.clone().sub(tk), B.clone().add(tk), B.clone().sub(tk)]);
+    const seg = new THREE.LineSegments(geo, dimMat);
+    parent.add(seg);
+    dimLines.push(seg);
+    const m = A.clone().add(B).multiplyScalar(0.5);
+    addLabel(text, parent, m.x, m.y, m.z, 'dims');
+  }
+  dimension(resMove, [-W / 2, HB + 1.4, D / 2], [W / 2, HB + 1.4, D / 2], [0, 1, 0], 'Ancho 30 cm');
+  dimension(resMove, [W / 2 + 1.8, 0, D / 2], [W / 2 + 1.8, HB, D / 2], [1, 0, 0], 'Alto 22.5 cm');
+  dimension(frenteMove, [W / 2 + 1.8, 0, -D / 2], [W / 2 + 1.8, HF, -D / 2], [1, 0, 0], 'Alto 4.5 cm');
+  dimension(pBase.node, [W / 2 + 4.2, 0.05, -D / 2], [W / 2 + 4.2, 0.05, D / 2], [1, 0, 0], 'Largo 22 cm');
+  dimension(cat, [CAT_W / 2 + 1.6, 0.05, -CAT_L / 2], [CAT_W / 2 + 1.6, 0.05, CAT_L / 2], [1, 0, 0], 'Largo 8 cm');
+  dimension(tilt, [HOLES[0].x - RH, T + 0.08, HOLES[0].z], [HOLES[0].x + RH, T + 0.08, HOLES[0].z], [0, 0, 1], 'Ø 6.5 cm');
   addLabel('Cubo 30 × 30 × 30 cm', cubeGroup, 0, 16.4, -15.06, 'cube');
 
   const pv = new THREE.Vector3();
   function shown(o) { while (o) { if (!o.visible) return false; o = o.parent; } return true; }
   function updateLabels() {
     const w = stage.clientWidth, h = stage.clientHeight;
+    dimLines.forEach((l) => { l.visible = showDims; });
     for (let i = 0; i < anchors.length; i++) {
       const a = anchors[i];
       let vis = (a.kind === 'cube' ? showCube : showDims) && shown(a.o);
@@ -915,13 +992,11 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   function applyTheme() {
     const css = getComputedStyle(document.documentElement);
     const g = (n) => css.getPropertyValue(n).trim() || '#888888';
-    const st = new THREE.Color(g('--stage'));
     scene.background = null;
-    scene.fog = new THREE.Fog(st.getHex(), 130, 260);
-    tableMat.color.set(g('--table'));
+    scene.fog = new THREE.Fog(new THREE.Color(g('--stage')).getHex(), 110, 260);
     drawMat(g('--mat'));
     accent.set(g('--accent'));
-    [ringMat, aimMat, ghostMat, pathMat, cubeLineMat, landMark.material].forEach((m) => m.color.copy(accent));
+    [ringMat, aimMat, ghostMat, pathMat, cubeLineMat, sparkMat, landMark.material].forEach((m) => m.color.copy(accent));
     refreshHighlight();
   }
   applyTheme();
@@ -947,27 +1022,28 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
     select(hit ? hit.object.userData.part : null);
   });
 
-  // Vista y botones
-  let explodeTarget = 0, explodeNow = 0, busy = false, shot = null, ringT0 = null;
+  // Vista y botones (al abrir, las piezas llegan volando y se arman)
+  let explodeTarget = 0, explodeNow = reduceMotion ? 0 : 1, explodeEase = 0.05, busy = false, shot = null, ringT0 = null;
+  for (let i = 0; i < explode.length; i++) explode[i].obj.position.copy(explode[i].off).multiplyScalar(explodeNow);
   const segBtns = document.querySelectorAll('[data-explode]');
   function setExplode(v) {
     if (busy && v) return;
     explodeTarget = v;
+    explodeEase = 0.14;
     segBtns.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.explode === v)));
   }
   segBtns.forEach((b) => b.addEventListener('click', () => setExplode(+b.dataset.explode)));
-  function toggle(id, get, set) {
-    const btn = $(id);
-    btn.addEventListener('click', () => { set(!get()); btn.setAttribute('aria-pressed', String(get())); });
+  function bindCheck(id, set) {
+    const el = $(id);
+    el.addEventListener('change', () => set(el.checked));
   }
-  toggle('#tCube', () => showCube, (v) => { showCube = v; });
-  toggle('#tPath', () => showPath, (v) => { showPath = v; });
-  toggle('#tDims', () => showDims, (v) => { showDims = v; });
+  bindCheck('#tCube', (v) => { showCube = v; });
+  bindCheck('#tPath', (v) => { showPath = v; });
+  bindCheck('#tDims', (v) => { showDims = v; });
   const catBtn = $('#tCat');
-  catBtn.addEventListener('click', () => {
-    if (busy && catMove.visible) return;
-    catMove.visible = !catMove.visible;
-    catBtn.setAttribute('aria-pressed', String(catMove.visible));
+  catBtn.addEventListener('change', () => {
+    if (busy && !catBtn.checked) { catBtn.checked = true; return; }
+    catMove.visible = catBtn.checked;
   });
 
   // Reacciones a los controles
@@ -987,6 +1063,11 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   }
   hooks.push(() => {
     tilt.rotation.x = -state.theta;
+    if (state.theta !== sTheta) {
+      const g = sideGeo(state.theta);
+      wR.geometry = g; wL.geometry = g;
+      sGeo.dispose(); sGeo = g; sTheta = state.theta;
+    }
     ghost.rotation.x = sim.aStop;
     if (ball.parent === cap) seatBall();
     else ball.scale.setScalar(state.r);
@@ -1009,8 +1090,8 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
       if (rect.top < 0 || rect.bottom > window.innerHeight) stage.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
     }
     let delay = 0;
-    if (explodeTarget !== 0) { setExplode(0); delay = reduceMotion ? 0 : 700; }
-    if (!catMove.visible) { catMove.visible = true; catBtn.setAttribute('aria-pressed', 'true'); }
+    if (explodeTarget !== 0 || explodeNow > 0.02) { setExplode(0); delay = reduceMotion ? 0 : 700; }
+    if (!catMove.visible) { catMove.visible = true; catBtn.checked = true; }
     if (fromPanel && !reduceMotion) delay = Math.max(delay, 450);
     setTimeout(() => {
       cat.position.x = state.xc;
@@ -1024,14 +1105,15 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   function showToast(text) {
     toastEl.textContent = text;
     toastEl.classList.add('show');
-    stagePred.classList.add('dim');
+    stagePred.classList.add('dim-out');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => {
       toastEl.classList.remove('show');
-      stagePred.classList.remove('dim');
+      stagePred.classList.remove('dim-out');
       holeEls.forEach((c) => c.classList.remove('hit'));
     }, 2600);
   }
+  const hitPos = new THREE.Vector3();
   function finishShot(now) {
     const s = shot.sim;
     if (s.hole) {
@@ -1040,6 +1122,8 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
       ring.visible = true;
       ringT0 = now;
       holeEls.forEach((c) => c.classList.toggle('hit', +c.dataset.hole === s.hole.n));
+      tilt.updateWorldMatrix(true, false);
+      burst(tilt.localToWorld(hitPos.set(s.hole.x, T + 0.3, s.hole.z)));
     }
     showToast(s.text);
     shot.phase = 'done';
@@ -1107,11 +1191,14 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
   else window.addEventListener('resize', resize);
   resize();
 
+  let last = performance.now();
   function frame(now) {
     requestAnimationFrame(frame);
+    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
+    last = now;
     if (explodeNow !== explodeTarget) {
-      explodeNow = reduceMotion ? explodeTarget : explodeNow + (explodeTarget - explodeNow) * 0.14;
-      if (Math.abs(explodeTarget - explodeNow) < 0.002) explodeNow = explodeTarget;
+      explodeNow = reduceMotion ? explodeTarget : explodeNow + (explodeTarget - explodeNow) * explodeEase;
+      if (Math.abs(explodeTarget - explodeNow) < 0.002) { explodeNow = explodeTarget; explodeEase = 0.14; }
       for (let i = 0; i < explode.length; i++) explode[i].obj.position.copy(explode[i].off).multiplyScalar(explodeNow);
     }
     if (!shot) cat.position.x += (state.xc - cat.position.x) * (reduceMotion ? 1 : 0.18);
@@ -1120,11 +1207,12 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
     pathLine.visible = pathOn;
     landMark.visible = pathOn;
     aimRing.visible = pathOn && !!sim.hole;
-    ghost.visible = showPath && !shot;
+    ghost.visible = showPath && !shot && assembled;
     cubeGroup.visible = showCube && explodeNow < 0.98;
     cubeLineMat.opacity = 0.9 * (1 - explodeNow);
     stepShot(now);
     stepRing(now);
+    stepSparks(now, dt);
     updateBand();
     controls.update();
     renderer.render(scene, camera);
