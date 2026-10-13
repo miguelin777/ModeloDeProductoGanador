@@ -96,7 +96,6 @@ button:focus-visible,input:focus-visible,a:focus-visible,.pad:focus-visible{outl
 .dim{display:block;font:600 12px/1 var(--f-body);color:var(--s-ink);background:var(--s-card);border:2.5px solid var(--s-ink);padding:4px 8px;border-radius:999px}
 .dim.cube{background:var(--yellow)}
 .pt{display:block;font:700 14px/1 var(--f-body);color:#fff;border:2.5px solid var(--s-ink);border-radius:999px;padding:4px 9px;box-shadow:0 3px 0 var(--s-ink);text-shadow:0 1.5px 0 rgba(31,42,68,.6);animation:bob 2.2s ease-in-out infinite}
-.pt10{background:var(--blue)}.pt20{background:var(--green)}.pt30{background:var(--orange)}.pt50{background:var(--hot)}
 .pt.pop{animation:popit .7s cubic-bezier(.2,1.6,.4,1)}
 @keyframes bob{0%,100%{translate:0 0}50%{translate:0 -4px}}
 @keyframes popit{0%{scale:1}30%{scale:1.8}60%{scale:.9}100%{scale:1}}
@@ -133,8 +132,10 @@ button:focus-visible,input:focus-visible,a:focus-visible,.pad:focus-visible{outl
 .pad-tag{position:absolute;left:50%;top:-15px;transform:translateX(-50%);background:var(--red);color:#fff;border:2.5px solid var(--s-ink);border-radius:999px;padding:2px 10px;font-weight:700;font-size:14px;white-space:nowrap;pointer-events:none;animation:nudge 1.6s ease-in-out infinite}
 .pad.aiming .pad-tag,.pad.off .pad-tag{animation:none}
 @keyframes nudge{0%,100%{translate:0 0}50%{translate:0 -4px}}
+.pad-mult{position:absolute;right:-8px;top:16px;background:var(--yellow);color:var(--s-ink);border:2.5px solid var(--s-ink);border-radius:999px;padding:1px 8px;font-weight:700;font-size:16px;line-height:1.2;box-shadow:0 2px 0 var(--s-ink);pointer-events:none;transition:background-color .2s,color .2s}
+.pad-mult.big{background:var(--blue);color:#fff}
 .pad-read{position:absolute;left:154px;bottom:30px;background:var(--s-card);border:3px solid var(--s-ink);border-radius:999px;padding:4px 12px;font-weight:700;font-size:15px;pointer-events:none;box-shadow:0 3px 0 var(--s-ink);white-space:nowrap}
-@media (max-width:560px){.pad{left:10px;bottom:10px;width:100px;height:100px}.pad-read{left:122px;bottom:20px;font-size:14px}}
+@media (max-width:560px){.pad{left:10px;bottom:10px;width:100px;height:100px}.pad-read{left:122px;bottom:20px;font-size:14px}.pad-mult{font-size:14px;top:10px;right:-10px}}
 
 .end{position:absolute;inset:0;display:grid;place-items:center;background:rgba(31,42,68,.38);padding:16px}
 .end-card{background:var(--s-card);color:var(--s-ink);border:4px solid var(--s-ink);border-radius:26px;box-shadow:0 8px 0 var(--s-ink);padding:18px 22px 22px;text-align:center;display:grid;gap:6px;justify-items:center;width:min(320px,100%);animation:popin .45s cubic-bezier(.2,1.6,.4,1)}
@@ -154,6 +155,9 @@ button:focus-visible,input:focus-visible,a:focus-visible,.pad:focus-visible{outl
 .legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:16px;font-weight:600}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{display:inline-block;width:18px;height:18px;border-radius:50%;border:2.5px solid var(--line)}
+.legend .sep{width:3px;height:22px;border-radius:2px;background:var(--dash)}
+.legend .lg{display:inline-flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+@media (max-width:560px){.legend .sep{display:none}}
 
 /* Botones y panel */
 .btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--yellow);color:var(--on-color);border:3px solid var(--line);border-radius:16px;padding:12px 18px;font:700 18px/1 var(--f-body);cursor:pointer;box-shadow:0 5px 0 var(--line);transition:transform .08s,box-shadow .08s}
@@ -189,8 +193,13 @@ button:focus-visible,input:focus-visible,a:focus-visible,.pad:focus-visible{outl
 .choice button{appearance:none;flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--card);border:3px solid var(--line);border-radius:14px;padding:9px 8px;font:600 15px/1.1 var(--f-body);color:var(--text);cursor:pointer;box-shadow:0 4px 0 var(--line);transition:transform .08s,box-shadow .08s;white-space:nowrap}
 .choice button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
 .choice button[aria-pressed="true"]{background:var(--blue);color:#fff}
-.dot{display:inline-block;width:16px;height:16px;border-radius:50%;border:2.5px solid var(--s-ink);background:var(--yellow);flex:none}
+.dot{display:inline-block;width:18px;height:18px;border-radius:50%;border:2.5px solid var(--s-ink);background:var(--yellow);flex:none}
 .dot.big{width:22px;height:22px;background:var(--blue)}
+.balls button{justify-content:flex-start;gap:10px;padding:10px 12px;text-align:left}
+.bl{display:grid;gap:1px;min-width:0}
+.bl b{font-weight:700;font-size:16px}
+.bl small{font-size:13px;font-weight:600;opacity:.85}
+.help-line{margin:0;color:var(--text-soft);font-size:13px;line-height:1.35}
 .choice button[aria-pressed="true"] .dot.big{background:#bfe4ff}
 .switches{display:grid;gap:10px}
 .switch{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:600;cursor:pointer}
@@ -236,13 +245,14 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
 .plan{overflow-x:auto}
 .plan svg{display:block;width:100%;max-width:440px;height:auto;margin-inline:auto}
 .cut{fill:var(--plan-fill);stroke:var(--line);stroke-width:2.5}
-.hole{fill:var(--card);stroke:var(--line);stroke-width:2.5;transition:fill .25s}
-.hole.aim{stroke:var(--hot);stroke-width:4;stroke-dasharray:7 5}
+.hole{fill:#ffffff;stroke-width:7;transition:fill .25s}
+.hole.aim{stroke-dasharray:9 6}
 .hole.hit{fill:var(--yellow)}
 .dl{stroke:var(--text-soft);stroke-width:1.2;fill:none}
 .dt{fill:var(--text-soft);font:600 12px var(--f-body)}
 .hn{fill:var(--text);font:700 17px var(--f-body)}
-.hp{font:700 12px var(--f-body)}
+.hv{fill:#1f2a44;font:700 24px var(--f-body)}
+.hs{fill:#4b5877;font:600 11px var(--f-body)}
 .front{fill:var(--text-soft);font:700 12px var(--f-body);letter-spacing:.05em}
 .caption{margin:0;font-size:14px;color:var(--text-soft)}
 
@@ -296,6 +306,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
             </g>
           </svg>
           <span class="pad-tag">¡Jala!</span>
+          <span class="pad-mult" id="padMult">×2</span>
         </div>
         <div class="pad-read" id="padRead" hidden></div>
         <div class="end" id="end" hidden>
@@ -313,27 +324,21 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
         </div>
         <p class="fallback" id="fallback" hidden>No se pudo cargar el juego en 3D en este navegador. La pista, el chequeo del cubo y las piezas siguen funcionando.</p>
       </div>
-      <div class="legend" aria-label="Puntos por hoyo">
-        <span><i style="background:#3fa7ff"></i>10</span>
-        <span><i style="background:#4bc96b"></i>20</span>
-        <span><i style="background:#ff9f1c"></i>30</span>
-        <span><i style="background:#ff4d6d"></i>50 puntos</span>
+      <div class="legend" aria-label="Puntos por hoyo y multiplicador de la bolita">
+        <span class="lg"><span><i style="background:#4bc96b"></i>6</span><span><i style="background:#1fb5c4"></i>7</span><span><i style="background:#8d6bff"></i>8</span><span><i style="background:#ff9f1c"></i>9</span><span><i style="background:#ff6fa9"></i>10</span><span><i style="background:#ff4d6d"></i>11 puntos</span></span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="lg"><span><i style="background:#ffd23f"></i>Chica ×2</span><span><i style="background:#3fa7ff"></i>Grande ×3</span></span>
       </div>
     </section>
 
     <aside class="card settings" aria-label="Ajustes del tiro">
       <section class="set-block" aria-labelledby="sBall">
         <h2 class="set-title" id="sBall"><i style="background:var(--yellow)"></i>Tu bolita</h2>
-        <div class="choice" role="group" aria-label="Tamaño de la bolita">
-          <button type="button" data-ball="4" aria-pressed="true"><span class="dot"></span>Chica · 4 cm</button>
-          <button type="button" data-ball="6" aria-pressed="false"><span class="dot big"></span>Grande · 6 cm</button>
+        <div class="choice balls" role="group" aria-label="Tamaño de la bolita">
+          <button type="button" data-ball="s" aria-pressed="true"><span class="dot"></span><span class="bl"><b>Chica</b><small>3.5 cm · ×2</small></span></button>
+          <button type="button" data-ball="b" aria-pressed="false"><span class="dot big"></span><span class="bl"><b>Grande</b><small>4 cm · ×3</small></span></button>
         </div>
-        <div class="row">
-          <label for="ballD">Diámetro</label>
-          <input type="range" id="ballD" min="2" max="6.4" step="0.1" value="4">
-          <output id="ballOut" for="ballD">4 cm</output>
-          <p class="help">Los hoyos miden 6.5 cm, así que la bolita llega hasta 6.4.</p>
-        </div>
+        <p class="help-line">Los puntos del hoyo se multiplican: ×2 con la chica y ×3 con la grande.</p>
       </section>
 
       <section class="set-block" aria-labelledby="sShot">
@@ -410,11 +415,11 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
         <div class="card-head"><h3 id="partsTitle">Piezas</h3><span class="meta">MDF 3 mm · medidas exteriores</span></div>
         <p class="group-label">Caja de los blancos</p>
         <ul class="parts">
-          <li><button type="button" class="part" data-part="tablero" aria-pressed="false"><span class="sw" style="background:#fff3d6"></span><span class="name">Tablero con hoyos</span><span class="dims">30 × 22 cm · 6 hoyos de 6.5 cm · fijo a 25°</span><span class="qty">×1</span></button></li>
+          <li><button type="button" class="part" data-part="tablero" aria-pressed="false"><span class="sw" style="background:#fff3d6"></span><span class="name">Tablero con hoyos</span><span class="dims">30 × 24.17 cm · 6 hoyos de 6.5 cm</span><span class="qty">×1</span></button></li>
           <li><button type="button" class="part" data-part="base" aria-pressed="false"><span class="sw" style="background:#8d6bff"></span><span class="name">Base</span><span class="dims">30 × 22 cm</span><span class="qty">×1</span></button></li>
           <li><button type="button" class="part" data-part="frente" aria-pressed="false"><span class="sw" style="background:#ff5a5f"></span><span class="name">Frente</span><span class="dims">30 cm de ancho · 4.5 cm de alto</span><span class="qty">×1</span></button></li>
-          <li><button type="button" class="part" data-part="respaldo" aria-pressed="false"><span class="sw" style="background:#3fa7ff"></span><span class="name">Respaldo</span><span class="dims">30 cm de ancho · 22.5 cm de alto · agarradera 10 × 3 cm</span><span class="qty">×1</span></button></li>
-          <li><button type="button" class="part" data-part="laterales" aria-pressed="false"><span class="sw" style="background:#ff9f1c"></span><span class="name">Laterales (triángulo)</span><span class="dims">19.9 cm de largo · 4.5 cm adelante → 13.8 cm atrás · el izquierdo trae la salida de la bolita (arco de 7.4 cm)</span><span class="qty">×2</span></button></li>
+          <li><button type="button" class="part" data-part="respaldo" aria-pressed="false"><span class="sw" style="background:#3fa7ff"></span><span class="name">Respaldo</span><span class="dims">30 cm de ancho · 22.5 cm de alto</span><span class="qty">×1</span></button></li>
+          <li><button type="button" class="part" data-part="laterales" aria-pressed="false"><span class="sw" style="background:#ff9f1c"></span><span class="name">Laterales (triángulo)</span><span class="dims">22 cm de largo · 4.5 cm adelante → 14.5 cm atrás</span><span class="qty">×2</span></button></li>
         </ul>
         <p class="group-label">Catapulta · va aparte</p>
         <ul class="parts">
@@ -423,45 +428,36 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
       </article>
 
       <article class="card" aria-labelledby="planTitle">
-        <div class="card-head"><h3 id="planTitle">Plano del tablero</h3><span class="meta">cm · a centros</span></div>
+        <div class="card-head"><h3 id="planTitle">Plano del tablero</h3><span class="meta">medidas en cm</span></div>
         <div class="plan">
-          <svg viewBox="0 0 390 330" role="img" aria-label="Tablero de 30 por 22 centímetros con seis hoyos de 6.5 centímetros en dos filas de tres">
+          <svg viewBox="0 0 390 318" role="img" aria-label="Tablero de 30 por 24.17 centímetros con seis hoyos de 6.5 centímetros. Arriba valen 11, 9 y 10 y abajo 8, 6 y 7">
             <path class="dl" d="M50 18v12M350 18v12M50 24H350"/>
             <text class="dt" x="200" y="14" text-anchor="middle">30 cm</text>
-            <path class="dl" d="M362 40h12M362 260h12M368 40V260"/>
-            <text class="dt" x="384" y="150" text-anchor="middle" transform="rotate(-90 384 150)">22 cm</text>
-            <path class="dl" d="M50 276v12M108.75 276v12M200 276v12M291.25 276v12M350 276v12M50 282H350"/>
-            <text class="dt" x="79.4" y="300" text-anchor="middle">5.875</text>
-            <text class="dt" x="154.4" y="300" text-anchor="middle">9.125</text>
-            <text class="dt" x="245.6" y="300" text-anchor="middle">9.125</text>
-            <text class="dt" x="320.6" y="300" text-anchor="middle">5.875</text>
-            <path class="dl" d="M24 40h12M24 102.5h12M24 197.5h12M24 260h12M30 40V260"/>
-            <text class="dt" x="21" y="71.25" text-anchor="middle" transform="rotate(-90 21 71.25)">6.25</text>
-            <text class="dt" x="21" y="150" text-anchor="middle" transform="rotate(-90 21 150)">9.5</text>
-            <text class="dt" x="21" y="228.75" text-anchor="middle" transform="rotate(-90 21 228.75)">6.25</text>
-            <rect class="cut" x="50" y="40" width="300" height="220" rx="4"/>
-            <circle class="hole" data-hole="4" cx="108.75" cy="102.5" r="32.5"/>
-            <circle class="hole" data-hole="5" cx="200" cy="102.5" r="32.5"/>
-            <circle class="hole" data-hole="6" cx="291.25" cy="102.5" r="32.5"/>
-            <circle class="hole" data-hole="1" cx="108.75" cy="197.5" r="32.5"/>
-            <circle class="hole" data-hole="2" cx="200" cy="197.5" r="32.5"/>
-            <circle class="hole" data-hole="3" cx="291.25" cy="197.5" r="32.5"/>
-            <text class="hn" x="108.75" y="104" text-anchor="middle">4</text>
-            <text class="hn" x="200" y="104" text-anchor="middle">5</text>
-            <text class="hn" x="291.25" y="104" text-anchor="middle">6</text>
-            <text class="hn" x="108.75" y="199" text-anchor="middle">1</text>
-            <text class="hn" x="200" y="199" text-anchor="middle">2</text>
-            <text class="hn" x="291.25" y="199" text-anchor="middle">3</text>
-            <text class="hp" x="108.75" y="120" text-anchor="middle" fill="#e07f00">30 pts</text>
-            <text class="hp" x="200" y="120" text-anchor="middle" fill="#ff4d6d">50 pts</text>
-            <text class="hp" x="291.25" y="120" text-anchor="middle" fill="#e07f00">30 pts</text>
-            <text class="hp" x="108.75" y="215" text-anchor="middle" fill="#2b86d6">10 pts</text>
-            <text class="hp" x="200" y="215" text-anchor="middle" fill="#2f9e4f">20 pts</text>
-            <text class="hp" x="291.25" y="215" text-anchor="middle" fill="#2b86d6">10 pts</text>
-            <text class="front" x="200" y="322" text-anchor="middle">FRENTE · LADO DE LA CATAPULTA</text>
+            <path class="dl" d="M362 40h12M362 281.7h12M368 40V281.7"/>
+            <text class="dt" x="384" y="160.8" text-anchor="middle" transform="rotate(-90 384 160.8)">24.17 cm</text>
+            <rect class="cut" x="50" y="40" width="300" height="241.7" rx="4"/>
+            <circle class="hole" data-hole="4" cx="108.75" cy="113.37" r="32.5" style="stroke:#ff4d6d"/>
+            <circle class="hole" data-hole="5" cx="200" cy="113.37" r="32.5" style="stroke:#ff9f1c"/>
+            <circle class="hole" data-hole="6" cx="291.25" cy="113.37" r="32.5" style="stroke:#ff6fa9"/>
+            <circle class="hole" data-hole="1" cx="108.75" cy="208.37" r="32.5" style="stroke:#8d6bff"/>
+            <circle class="hole" data-hole="2" cx="200" cy="208.37" r="32.5" style="stroke:#4bc96b"/>
+            <circle class="hole" data-hole="3" cx="291.25" cy="208.37" r="32.5" style="stroke:#1fb5c4"/>
+            <text class="hv" x="108.75" y="119.37" text-anchor="middle">11</text>
+            <text class="hs" x="108.75" y="133.37" text-anchor="middle">pts</text>
+            <text class="hv" x="200" y="119.37" text-anchor="middle">9</text>
+            <text class="hs" x="200" y="133.37" text-anchor="middle">pts</text>
+            <text class="hv" x="291.25" y="119.37" text-anchor="middle">10</text>
+            <text class="hs" x="291.25" y="133.37" text-anchor="middle">pts</text>
+            <text class="hv" x="108.75" y="214.37" text-anchor="middle">8</text>
+            <text class="hs" x="108.75" y="228.37" text-anchor="middle">pts</text>
+            <text class="hv" x="200" y="214.37" text-anchor="middle">6</text>
+            <text class="hs" x="200" y="228.37" text-anchor="middle">pts</text>
+            <text class="hv" x="291.25" y="214.37" text-anchor="middle">7</text>
+            <text class="hs" x="291.25" y="228.37" text-anchor="middle">pts</text>
+            <text class="front" x="200" y="306" text-anchor="middle">FRENTE · LADO DE LA CATAPULTA</text>
           </svg>
         </div>
-        <p class="caption">Hoyos de 6.5 cm. Valen 10, 20 y 10 los de adelante (1, 2, 3) y 30, 50 y 30 los de atrás (4, 5, 6). El punteado rojo marca a cuál va la bolita.</p>
+        <p class="caption">Hoyos de 6.5 cm. Arriba valen 11, 9 y 10; abajo 8, 6 y 7. Con la bolita chica los puntos van ×2 y con la grande ×3. El aro punteado marca a qué hoyo va la bolita.</p>
       </article>
     </div>
   </section>
@@ -479,16 +475,21 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
   'use strict';
   // ---------- Medidas (cm) ----------
   const T = 0.3, W = 30, D = 22, HF = 4.5, HB = 22.5, RH = 3.25, G = 981;
-  const THETA = 25 * Math.PI / 180; // el tablero va fijo a 25°
+  const RISE = 10; // el tablero sube 10 cm de adelante hacia atrás (de 4.5 a 14.5 cm)
+  const THETA = Math.atan2(RISE, D);
+  const PL = Math.hypot(D, RISE); // largo del tablero con hoyos: 24.17 cm
   const CAT_W = 10, CAT_H = 3, CAT_L = 8, CAT_Z = -D / 2 - CAT_L / 2 - 0.02;
   const PIV_Y = 4.6, PIV_Z = 3.0, ARM_L = 5.2, CUP_R = 1.45, REST = -0.2, SLOWMO = 2;
   const EXIT_S = 14, EXIT_HALF = 3.7, EXIT_POST = 3.9; // salida de la bolita en el lateral izquierdo
+  const ROW1 = (PL - 9.5) / 2, ROW2 = ROW1 + 9.5;
   const HOLES = [
-    { n: 1, x: 9.125, z: 6.25 }, { n: 2, x: 0, z: 6.25 }, { n: 3, x: -9.125, z: 6.25 },
-    { n: 4, x: 9.125, z: 15.75 }, { n: 5, x: 0, z: 15.75 }, { n: 6, x: -9.125, z: 15.75 }
+    { n: 1, x: 9.125, z: ROW1 }, { n: 2, x: 0, z: ROW1 }, { n: 3, x: -9.125, z: ROW1 },
+    { n: 4, x: 9.125, z: ROW2 }, { n: 5, x: 0, z: ROW2 }, { n: 6, x: -9.125, z: ROW2 }
   ];
-  const POINTS = { 1: 10, 2: 20, 3: 10, 4: 30, 5: 50, 6: 30 };
-  const PT_COLOR = { 10: '#3fa7ff', 20: '#4bc96b', 30: '#ff9f1c', 50: '#ff4d6d' };
+  // Puntos vistos desde la catapulta: arriba 11 · 9 · 10, abajo 8 · 6 · 7
+  const POINTS = { 1: 8, 2: 6, 3: 7, 4: 11, 5: 9, 6: 10 };
+  const PT_COLOR = { 6: '#4bc96b', 7: '#1fb5c4', 8: '#8d6bff', 9: '#ff9f1c', 10: '#ff6fa9', 11: '#ff4d6d' };
+  const BALLS = { s: { d: 3.5, mult: 2, color: '#ffd23f' }, b: { d: 4, mult: 3, color: '#3fa7ff' } };
   const SHOTS = 5;
   const COLS = { '1': 9.125, '0': 0, '-1': -9.125 };
   const DEG = Math.PI / 180;
@@ -505,31 +506,30 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
   const launchBtn = $('#launch'), launchLabel = launchBtn.querySelector('.btn-label');
   const alphaIn = $('#alpha'), alphaOut = $('#alphaOut'), alphaHelp = $('#alphaHelp');
   const speedIn = $('#speed'), speedOut = $('#speedOut');
-  const ballIn = $('#ballD'), ballOut = $('#ballOut');
   const predEl = $('#pred'), predValue = $('#predValue'), predDetail = $('#predDetail');
-  const sliders = [alphaIn, speedIn, ballIn];
+  const sliders = [alphaIn, speedIn];
   const ballBtns = document.querySelectorAll('[data-ball]'), colBtns = document.querySelectorAll('[data-col]');
   const holeEls = document.querySelectorAll('.hole');
   const scoreEl = $('#score'), scorePill = $('#scorePill'), bestEl = $('#best'), shotsEl = $('#shots');
   const shotDots = shotsEl.querySelectorAll('i');
-  const pad = $('#pad'), padBall = $('#padBall'), padBallFill = $('#padBallFill'), padRead = $('#padRead');
+  const pad = $('#pad'), padBall = $('#padBall'), padBallFill = $('#padBallFill'), padRead = $('#padRead'), padMult = $('#padMult');
   const padBands = pad.querySelectorAll('.band');
   const soundBtn = $('#sound');
 
-  const state = { alpha: 60 * DEG, v: 150, r: 2, col: '0', xc: 0, theta: THETA };
+  const state = { alpha: 60 * DEG, v: 150, r: BALLS.s.d / 2, ball: 's', col: '0', xc: 0, theta: THETA };
 
   // Altura del centro de la bolita sobre la tapa (depende del tamaño)
   function ballY(r) { return Math.max(0.15 + r, 1.1 + Math.sqrt(Math.max(0, r * r - CUP_R * CUP_R))); }
-  function ballHex(r) { return r * 2 > 5 ? '#3fa7ff' : '#ffd23f'; }
 
   // ---------- Simulación (tiro parabólico + rodar por el tablero) ----------
   function simulate(p) {
     const sT = Math.sin(p.theta), cT = Math.cos(p.theta);
     const P0y = HF + T * cT, P0z = -D / 2 - T * sT;
-    const plateEndZ = -D / 2 + D * cT;
     const backInnerZ = D / 2 - T;
+    const sEnd = Math.min(PL, (backInnerZ - P0z) / cT); // el tablero llega hasta el respaldo
+    const plateEndZ = P0z + sEnd * cT;
     const gap = backInnerZ - plateEndZ;
-    const edgeTopY = P0y + D * sT;
+    const edgeTopY = P0y + sEnd * sT;
     const r = p.r, x = p.xc;
     const catZ0 = CAT_Z - CAT_L / 2, catZ1 = CAT_Z + CAT_L / 2;
     const supportY = (zz) => (zz >= catZ0 && zz <= catZ1) ? CAT_H : 0;
@@ -560,11 +560,11 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
       else if (z > -D / 2 && z < backInnerZ) {
         const s = (y - P0y) * sT + (z - P0z) * cT;
         const d = (y - P0y) * cT - (z - P0z) * sT;
-        if (s >= 0 && s <= D && d <= r && vy * cT - vz * sT < 0) {
+        if (s >= 0 && s <= sEnd && d <= r && vy * cT - vz * sT < 0) {
           ev = 'plate';
-          const sc = Math.min(D, Math.max(0, s));
+          const sc = Math.min(sEnd, Math.max(0, s));
           y = cy(sc); z = cz(sc);
-        } else if (s > D && y <= edgeTopY + r && z > plateEndZ - r) ev = 'edge';
+        } else if (s > sEnd && y <= edgeTopY + r && z > plateEndZ - r) ev = 'edge';
       }
       if (!ev && (z < -D / 2 || z > D / 2) && vy < 0 && y - r <= supportY(z)) {
         y = supportY(z) + r;
@@ -631,15 +631,15 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     }
 
     let res;
-    if (ev === 'plate') res = onPlate(Math.min(D, Math.max(0, (y - P0y) * sT + (z - P0z) * cT)), null);
+    if (ev === 'plate') res = onPlate(Math.min(sEnd, Math.max(0, (y - P0y) * sT + (z - P0z) * cT)), null);
     else if (ev === 'edge') {
       if (gap >= 2 * r) { fall(T + r, Math.min(Math.max(z, plateEndZ + r), backInnerZ - r)); res = { kind: 'gap' }; }
-      else { fall(cy(D), cz(D)); res = onPlate(D, null); }
+      else { fall(cy(sEnd), cz(sEnd)); res = onPlate(sEnd, null); }
     } else if (ev === 'back') {
       const zw = backInnerZ - r, sw = (zw - P0z + r * sT) / cT;
-      if (sw <= D) { fall(cy(sw), zw); res = onPlate(sw, 'respaldo'); }
+      if (sw <= sEnd) { fall(cy(sw), zw); res = onPlate(sw, 'respaldo'); }
       else if (gap >= 2 * r) { fall(T + r, zw); res = { kind: 'gap', how: 'respaldo' }; }
-      else { fall(cy(D), cz(D)); res = onPlate(D, 'respaldo'); }
+      else { fall(cy(sEnd), cz(sEnd)); res = onPlate(sEnd, 'respaldo'); }
     } else if (ev === 'front') {
       const zf = Math.min(z, -D / 2 - r);
       fall(supportY(zf) + r, zf);
@@ -649,10 +649,11 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     let short, text;
     const n = res.hole ? res.hole.n : 0;
     if (res.kind === 'hole') {
-      short = 'Hoyo ' + n;
-      text = res.how === 'respaldo' ? 'Pega en el respaldo y cae en el hoyo ' + n + '.'
-        : res.how === 'rueda' ? 'Cae en la tabla y rueda hasta el hoyo ' + n + '.'
-        : 'Cae directo en el hoyo ' + n + '.';
+      const hv = POINTS[n];
+      short = 'Hoyo de ' + hv;
+      text = res.how === 'respaldo' ? 'Pega en el respaldo y cae en el hoyo de ' + hv + '.'
+        : res.how === 'rueda' ? 'Cae en la tabla y rueda hasta el hoyo de ' + hv + '.'
+        : 'Cae directo en el hoyo de ' + hv + '.';
     } else if (res.kind === 'rolloff') {
       short = 'Se sale';
       text = res.how === 'respaldo' ? 'Pega en el respaldo, rueda y se sale por el frente.' : 'Cae en la tabla, no atina a ningún hoyo y se sale por el frente.';
@@ -666,7 +667,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
   }
 
   // ---------- Marcador ----------
-  const game = { score: 0, shots: SHOTS, best: Math.max(0, parseInt(store.get('catapulta-record') || '0', 10) || 0), over: false };
+  const game = { score: 0, shots: SHOTS, best: Math.max(0, parseInt(store.get('catapulta-record-v2') || '0', 10) || 0), over: false };
   function renderHud() {
     shotDots.forEach((d, i) => d.classList.toggle('used', i < SHOTS - game.shots));
     shotsEl.setAttribute('aria-label', 'Te quedan ' + game.shots + (game.shots === 1 ? ' tiro' : ' tiros'));
@@ -730,25 +731,28 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
   function refresh() {
     state.alpha = (+alphaIn.value) * DEG;
     state.v = (+speedIn.value) * 100;
-    state.r = (+ballIn.value) / 2;
+    state.r = BALLS[state.ball].d / 2;
     state.xc = COLS[state.col];
     alphaOut.textContent = Math.round(+alphaIn.value) + '°';
     alphaHelp.textContent = 'El brazo se frena a ' + Math.round(90 - +alphaIn.value) + '° y la bolita sale a ' + Math.round(+alphaIn.value) + '°.';
     speedOut.textContent = (+speedIn.value).toFixed(2) + ' m/s';
-    ballOut.textContent = fmt(+ballIn.value) + ' cm';
-    ballBtns.forEach((b) => b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.ball - +ballIn.value) < 0.05)));
+    ballBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ball === state.ball)));
     colBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.col === state.col)));
-    padBallFill.setAttribute('fill', ballHex(state.r));
+    const ball = BALLS[state.ball];
+    padBallFill.setAttribute('fill', ball.color);
+    padMult.textContent = '×' + ball.mult;
+    padMult.classList.toggle('big', state.ball === 'b');
     sim = simulate(state);
-    predValue.textContent = sim.hole ? 'Hoyo ' + sim.hole.n + ' · +' + POINTS[sim.hole.n] : sim.short;
+    const hv = sim.hole ? POINTS[sim.hole.n] : 0;
+    predValue.textContent = sim.hole ? 'Hoyo de ' + hv + ' · +' + hv * ball.mult : sim.short;
     predEl.dataset.kind = sim.hole ? 'hole' : 'miss';
-    predDetail.textContent = sim.text;
+    predDetail.textContent = sim.hole ? sim.text + ' Vale ' + hv + ' × ' + ball.mult + '.' : sim.text;
     sliders.forEach((el) => el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100).toFixed(1) + '%'));
     holeEls.forEach((c) => c.classList.toggle('aim', !!sim.hole && +c.dataset.hole === sim.hole.n));
     hooks.forEach((fn) => fn());
   }
   sliders.forEach((el) => el.addEventListener('input', refresh));
-  ballBtns.forEach((b) => b.addEventListener('click', () => { ballIn.value = b.dataset.ball; refresh(); }));
+  ballBtns.forEach((b) => b.addEventListener('click', () => { state.ball = b.dataset.ball; refresh(); }));
   colBtns.forEach((b) => b.addEventListener('click', () => { state.col = b.dataset.col; refresh(); }));
   refresh();
 
@@ -1002,7 +1006,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     }
     // Lateral: triángulo recto bajo la diagonal del tablero; el izquierdo lleva un arco para que salga la bolita
     function sideGeo(withExit) {
-      const run = D * Math.cos(THETA), hb = HF + D * Math.sin(THETA);
+      const run = D, hb = HF + RISE;
       const s = new THREE.Shape();
       s.moveTo(0, 0);
       if (withExit) {
@@ -1018,9 +1022,9 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     }
 
     // Tablero: crema con aros de colores (el color dice cuánto vale cada hoyo)
-    const PW = W - 2 * T, PPX = 40;
+    const PW = W, PLM = PL - 0.25, PPX = 40;
     const plateCanvas = document.createElement('canvas');
-    plateCanvas.width = Math.round(PW * PPX); plateCanvas.height = D * PPX;
+    plateCanvas.width = Math.round(PW * PPX); plateCanvas.height = Math.round(PLM * PPX);
     (function () {
       const g = plateCanvas.getContext('2d'), w = plateCanvas.width, h = plateCanvas.height;
       g.fillStyle = '#fff3d6'; g.fillRect(0, 0, w, h);
@@ -1046,18 +1050,18 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
       });
     })();
     const plateTex = new THREE.CanvasTexture(plateCanvas);
-    plateTex.repeat.set(1 / PW, 1 / D);
+    plateTex.repeat.set(1 / PW, 1 / PLM);
     plateTex.offset.set(0.5, 1);
     plateTex.anisotropy = maxAniso;
     // Respaldo: rayas de feria con dos estrellas
-    const BPX = 20;
+    const BPX = 20, BW = W - 2 * T;
     const backCanvas = document.createElement('canvas');
-    backCanvas.width = Math.round(PW * BPX); backCanvas.height = Math.round(HB * BPX);
+    backCanvas.width = Math.round(BW * BPX); backCanvas.height = Math.round(HB * BPX);
     (function () {
       const g = backCanvas.getContext('2d'), w = backCanvas.width, h = backCanvas.height, n = 10;
       for (let i = 0; i < n; i++) { g.fillStyle = i % 2 ? '#62b8ff' : '#3fa7ff'; g.fillRect(i * w / n, 0, w / n + 1, h); }
       [-9.6, 9.6].forEach((sx) => {
-        const cx = (sx + PW / 2) * BPX, cy = (1 - 17 / HB) * h, R = 2.5 * BPX;
+        const cx = (sx + BW / 2) * BPX, cy = (1 - 18.4 / HB) * h, R = 2.3 * BPX;
         g.beginPath();
         for (let k = 0; k < 10; k++) {
           const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? R * 0.45 : R;
@@ -1069,7 +1073,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
       });
     })();
     const backTex = new THREE.CanvasTexture(backCanvas);
-    backTex.repeat.set(1 / PW, 1 / HB);
+    backTex.repeat.set(1 / BW, 1 / HB);
     backTex.offset.set(0.5, 0);
     backTex.anisotropy = maxAniso;
 
@@ -1105,7 +1109,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     tilt.position.set(0, HF, -D / 2);
     tilt.rotation.x = -THETA;
     tabMove.add(tilt);
-    mesh(pTab, flatPlate(W - 2 * T, D, HOLES), tilt);
+    mesh(pTab, flatPlate(W, PLM, HOLES), tilt);
     const pFrente = part('frente', toon(0xff5a5f), 0xd9434a);
     const frenteMove = sub(pFrente, [0, 0, -6]);
     mesh(pFrente, panelGeo(W - 2 * T, HF, null), frenteMove).position.set(0, 0, -D / 2);
@@ -1239,7 +1243,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
       return tex;
     }
     const ballRig = new THREE.Group();
-    const ballMat = toon(0xffffff, faceTex(ballHex(state.r), 'smile'));
+    const ballMat = toon(0xffffff, faceTex(BALLS[state.ball].color, 'smile'));
     const ball = new THREE.Mesh(new THREE.SphereGeometry(1, 36, 24), ballMat);
     ball.castShadow = true;
     ballRig.add(ball);
@@ -1255,12 +1259,12 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     }
     seatBall();
     function applyFace(now) {
-      const r = (!seated() && shot) ? shot.sim.r : state.r;
+      const col = BALLS[(!seated() && shot) ? shot.ball : state.ball].color;
       const m = (mood === 'smile' && now < blinkUntil) ? 'blink' : mood;
-      const key = ballHex(r) + m;
+      const key = col + m;
       if (key === faceKey) return;
       faceKey = key;
-      ballMat.map = faceTex(ballHex(r), m);
+      ballMat.map = faceTex(col, m);
     }
     function setMood(m) { mood = m; }
     const sq = { a: 0, t0: 0 };
@@ -1437,7 +1441,8 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     }
     HOLES.forEach((h, i) => {
       const v = POINTS[h.n];
-      const a = addLabel('+' + v, tilt, h.x, T + 0.8, h.z + RH + 1.3, 'pts', 'pt pt' + v);
+      const a = addLabel(String(v), tilt, h.x, T + 0.8, h.z + RH + 1.3, 'pts', 'pt');
+      a.inner.style.background = PT_COLOR[v];
       a.inner.style.animationDelay = (-i * 0.37).toFixed(2) + 's';
       ptLabels[h.n] = a;
     });
@@ -1466,6 +1471,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     dimension(pBase.node, [-W / 2 - 4.2, 0.05, -D / 2], [-W / 2 - 4.2, 0.05, D / 2], [1, 0, 0], 'Largo 22 cm');
     dimension(cat, [-CAT_W / 2 - 1.6, 0.05, -CAT_L / 2], [-CAT_W / 2 - 1.6, 0.05, CAT_L / 2], [1, 0, 0], 'Largo 8 cm');
     dimension(tilt, [HOLES[2].x - RH, T + 0.1, HOLES[2].z], [HOLES[2].x + RH, T + 0.1, HOLES[2].z], [0, 0, 1], 'Hoyo 6.5 cm');
+    dimension(tilt, [-W / 2 - 1.4, T + 0.1, 0], [-W / 2 - 1.4, T + 0.1, PL], [1, 0, 0], 'Tablero 24.17 cm');
     addLabel('Cubo 30 × 30 × 30 cm', cubeGroup, 0, 16.4, -15.06, 'cube', 'dim cube');
 
     const pv = new THREE.Vector3();
@@ -1662,7 +1668,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
       setTimeout(() => {
         cat.position.x = state.xc;
         clearTrail();
-        shot = { phase: 'swing', t0: performance.now(), sim: sim, from: arm.rotation.x };
+        shot = { phase: 'swing', t0: performance.now(), sim: sim, from: arm.rotation.x, ball: state.ball, mult: BALLS[state.ball].mult };
         launching = false;
         setMood('wee');
         sfx.launch();
@@ -1695,8 +1701,8 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
       const s = shot.sim;
       game.shots = Math.max(0, game.shots - 1);
       if (s.hole) {
-        const v = POINTS[s.hole.n];
-        game.score += v;
+        const v = POINTS[s.hole.n], gained = v * shot.mult;
+        game.score += gained;
         setScore(game.score);
         ring.position.set(s.hole.x, T + 0.08, s.hole.z);
         ring.scale.setScalar(1);
@@ -1706,7 +1712,7 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
         tilt.updateWorldMatrix(true, false);
         burst(tilt.localToWorld(tmpV.set(s.hole.x, T + 0.5, s.hole.z)), 1);
         popLabel(s.hole.n);
-        showToast('+' + v, '¡Al hoyo ' + s.hole.n + '!', false);
+        showToast('+' + gained, '¡Hoyo de ' + v + '! × ' + shot.mult, false);
         setMood('happy');
         sfx.hit();
         shake(0.55);
@@ -1856,9 +1862,9 @@ h3{margin:0;font-weight:700;font-size:22px;line-height:1.1}
     function endRound() {
       game.over = true;
       const sc = game.score;
-      const stars = sc >= 150 ? 3 : sc >= 90 ? 2 : sc >= 30 ? 1 : 0;
+      const stars = sc >= 100 ? 3 : sc >= 60 ? 2 : sc >= 12 ? 1 : 0;
       const record = sc > game.best;
-      if (record) { game.best = sc; store.set('catapulta-record', String(sc)); }
+      if (record) { game.best = sc; store.set('catapulta-record-v2', String(sc)); }
       endStars.forEach((el, i) => el.classList.toggle('on', i < stars));
       endScore.textContent = String(sc);
       endMsg.textContent = record ? '¡Nuevo récord!' : stars === 3 ? '¡Eres un crack!' : stars === 2 ? '¡Muy bien!' : stars === 1 ? '¡Bien! Tú puedes más' : '¡Sigue practicando!';
