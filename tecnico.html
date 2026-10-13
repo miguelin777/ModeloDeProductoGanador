@@ -20,64 +20,52 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout: hoja técnica en blanco y negro — rótulo arriba, visor 3D con el panel de simulación al lado, luego registro y predicción por factores, y al final especificaciones (envolvente, piezas, plano y puntuación) */
+/* Layout: el modelo 3D ocupa casi toda la pantalla, con pocos controles abajo; las especificaciones técnicas salen en un panel lateral que empuja el visor (en celular cubre la pantalla) */
 :root{
   --bg:#f1f1ee; --paper:#fbfbf9; --ink:#151617; --ink-2:#383b3c; --muted:#5c605f; --line:#d4d5d0; --line-strong:#a1a49f; --grid-line:#e5e6e1;
-  --sel:#e4e5e0; --inv-bg:#151617; --inv-fg:#fbfbf9; --stage-1:#f8f8f6; --stage-2:#e6e7e3;
+  --sel:#e4e5e0; --inv-bg:#151617; --inv-fg:#fbfbf9; --stage-1:#f8f8f6; --stage-2:#e6e7e3; --scrim:rgba(21,22,23,.28);
   --m-face:#f4f4f1; --m-side:#d0d1cc; --m-edge:#1c1d1e; --m-sel:#aeb1ab; --m-ground:#eceeea; --m-grid:#bfc1bc; --m-ball:#ffffff;
   --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
   --f-body:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --drawer-w:min(520px,44vw);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#111213; --paper:#17191a; --ink:#e8e9e6; --ink-2:#c6c8c4; --muted:#9a9e9b; --line:#2b2e2f; --line-strong:#4a4f50; --grid-line:#181a1b;
-    --sel:#232628; --inv-bg:#e8e9e6; --inv-fg:#111213; --stage-1:#1e2122; --stage-2:#141617;
+    --sel:#232628; --inv-bg:#e8e9e6; --inv-fg:#111213; --stage-1:#1e2122; --stage-2:#141617; --scrim:rgba(0,0,0,.5);
     --m-face:#4b4f51; --m-side:#36393b; --m-edge:#dcdedb; --m-sel:#7a7f82; --m-ground:#1a1c1d; --m-grid:#3a3e40; --m-ball:#e9eae7;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#111213; --paper:#17191a; --ink:#e8e9e6; --ink-2:#c6c8c4; --muted:#9a9e9b; --line:#2b2e2f; --line-strong:#4a4f50; --grid-line:#181a1b;
-  --sel:#232628; --inv-bg:#e8e9e6; --inv-fg:#111213; --stage-1:#1e2122; --stage-2:#141617;
+  --sel:#232628; --inv-bg:#e8e9e6; --inv-fg:#111213; --stage-1:#1e2122; --stage-2:#141617; --scrim:rgba(0,0,0,.5);
   --m-face:#4b4f51; --m-side:#36393b; --m-edge:#dcdedb; --m-sel:#7a7f82; --m-ground:#1a1c1d; --m-grid:#3a3e40; --m-ball:#e9eae7;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background-color:var(--bg);background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:20px 20px;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{margin:0;background-color:var(--bg);background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:20px 20px;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
-button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+button:focus-visible,input:focus-visible,a:focus-visible,[tabindex="-1"]:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 a{color:var(--ink)}
-.page{max-width:1200px;margin:0 auto;padding-inline:16px;padding-block:26px 40px;display:grid;gap:26px}
 h1,h2,h3{margin:0;font-family:var(--f-display);text-wrap:balance}
 .mono{font-family:var(--f-mono)}
 
-/* Rótulo */
-.head{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);align-items:end;padding-bottom:22px;border-bottom:1.5px solid var(--ink)}
-@media (min-width:900px){.head{grid-template-columns:minmax(0,1fr) 420px}}
-.eyebrow{margin:0 0 8px;font:500 11.5px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.92;letter-spacing:-.01em;margin-bottom:12px}
-.lede{margin:0;color:var(--ink-2);font-size:16px;max-width:56ch}
-.links{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font:500 13px/1.2 var(--f-mono)}
+/* Página: título corto y el modelo ocupa todo lo que queda de la pantalla */
+.layout{transition:padding-right .35s ease}
+@media (min-width:1000px){body.specs-open .layout{padding-right:var(--drawer-w)}}
+.page{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:20px 24px;display:grid;grid-template-rows:auto minmax(0,1fr);gap:14px;min-height:100vh;min-height:100svh}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 20px}
+.eyebrow{margin:0 0 6px;font:500 11.5px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-stretch:72%;font-weight:800;font-size:clamp(32px,6vw,54px);line-height:.95;letter-spacing:-.01em}
+.links{display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12.5px/1.2 var(--f-mono)}
 .links a{text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:2px}
 .links a:hover{border-bottom-color:var(--ink)}
-.rotulo{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1.5px solid var(--ink);background:var(--paper)}
-.rotulo div{padding:8px 11px;border-right:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);min-width:0}
-.rotulo div:nth-child(2n){border-right:0}
-.rotulo div:nth-last-child(-n+2){border-bottom:0}
-.rotulo dt{font:500 10.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-.rotulo dd{margin:3px 0 0;font:600 13.5px/1.25 var(--f-mono);font-variant-numeric:tabular-nums}
 
-/* Visor y simulación */
-.work{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);align-items:start}
-@media (min-width:1000px){.work{grid-template-columns:minmax(0,1.7fr) minmax(320px,1fr)}.panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}}
-.viewer{min-width:0;display:grid;gap:10px}
-.view-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.view-title h2{font-stretch:80%;font-weight:750;font-size:20px}
-.view-title span{font:500 11.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-.stage{position:relative;width:100%;max-width:100%;aspect-ratio:1/1;overflow:hidden;background:linear-gradient(180deg,var(--stage-1),var(--stage-2));border:1.5px solid var(--ink)}
-@media (min-width:620px){.stage{aspect-ratio:16/10}}
-.stage canvas{display:block;width:100%;height:100%;cursor:grab}
+.viewer{display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0}
+.stage{position:relative;flex:1 1 auto;width:100%;min-height:320px;overflow:hidden;background:linear-gradient(180deg,var(--stage-1),var(--stage-2));border:1.5px solid var(--ink)}
+.stage canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:grab;touch-action:none}
 .stage canvas:active{cursor:grabbing}
 .labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .lab{position:absolute;left:0;top:0;white-space:nowrap;will-change:transform}
@@ -86,27 +74,69 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
 .balloon{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--paper);border:1.5px solid var(--ink);font:600 12px/1 var(--f-mono)}
 .stage-note{position:absolute;left:10px;top:10px;display:flex;gap:7px;align-items:center;font:500 12px/1 var(--f-mono);color:var(--muted);background:var(--paper);border:1px solid var(--line-strong);padding:7px 10px;pointer-events:none}
 .stage-note b{color:var(--ink);font-weight:600}
-.toast{position:absolute;top:10px;left:50%;max-width:calc(100% - 24px);transform:translate(-50%,-6px);background:var(--inv-bg);color:var(--inv-fg);font:600 12.5px/1.3 var(--f-mono);padding:9px 14px;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
+.toast{position:absolute;top:10px;left:50%;width:max-content;max-width:calc(100% - 24px);transform:translate(-50%,-6px);background:var(--inv-bg);color:var(--inv-fg);font:600 12.5px/1.3 var(--f-mono);padding:9px 14px;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .hint{position:absolute;left:10px;bottom:10px;margin:0;font-size:12px;color:var(--muted);background:var(--paper);border:1px solid var(--line-strong);padding:6px 9px;pointer-events:none}
 .fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted);margin:0;background:var(--paper)}
-.toolbar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
-.tool-group{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
-.tool-label{font:500 10.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between}
+.tool-group{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .seg{display:inline-flex;border:1.5px solid var(--ink);background:var(--paper);max-width:100%}
-.seg button{appearance:none;border:0;background:transparent;font:600 13.5px/1 var(--f-body);padding:9px 12px;cursor:pointer;white-space:nowrap}
+.seg button{appearance:none;border:0;background:transparent;font:600 13.5px/1 var(--f-body);padding:10px 12px;cursor:pointer;white-space:nowrap}
 .seg button + button{border-left:1.5px solid var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--inv-bg);color:var(--inv-fg)}
 .seg button:hover:not([aria-pressed="true"]){background:var(--sel)}
-.checks{display:flex;flex-wrap:wrap;gap:8px 16px}
-.check{display:inline-flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;user-select:none}
-.check input{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin:0;border:1.5px solid var(--ink);background:var(--paper);display:inline-grid;place-items:center;cursor:pointer;flex:none}
-.check input::after{content:"";width:8px;height:8px;background:var(--ink);transform:scale(0);transition:transform .12s}
-.check input:checked::after{transform:scale(1)}
-.check input:disabled{opacity:.5}
+.seg button:disabled{opacity:.5;cursor:not-allowed}
+.toggle{appearance:none;display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--ink);background:var(--paper);font:600 13.5px/1 var(--f-body);padding:9px 12px;cursor:pointer}
+.toggle[aria-pressed="true"]{background:var(--inv-bg);color:var(--inv-fg)}
+.toggle svg{flex:none}
+.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);font:700 14.5px/1 var(--f-body);padding:12px 16px;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--inv-bg);color:var(--inv-fg)}
+.btn:hover{filter:contrast(1.15)}
+.btn:disabled{opacity:.55;cursor:progress}
+.btn.wide{width:100%}
+.actions{flex:1 1 auto;justify-content:flex-end}
+/* En celular: tres renglones (piezas + girar, cámara + lanzar, especificaciones) para dejarle más alto al modelo */
+@media (max-width:619px){
+  .toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+  .tool-group{display:contents}
+  .toolbar .seg{display:flex;width:100%}
+  .toolbar .seg button{flex:1;padding-inline:8px}
+  .seg-explode{grid-area:1/1}
+  #spin{grid-area:1/2;justify-content:center}
+  .seg-cam{grid-area:2/1}
+  #launchMain{grid-area:2/2}
+  #specsBtn{grid-area:3/1/4/3}
+}
 
-.panel{background:var(--paper);border:1.5px solid var(--ink);padding:16px;display:grid;gap:14px;min-width:0}
-.panel h2{font-stretch:80%;font-weight:750;font-size:20px;padding-bottom:10px;border-bottom:1px solid var(--line-strong)}
+/* Panel de especificaciones */
+.scrim{position:fixed;inset:0;background:var(--scrim);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s linear .3s;z-index:19}
+@media (max-width:999px){body.specs-open .scrim{opacity:1;visibility:visible;transition:opacity .3s}}
+body.specs-open{overflow:hidden}
+@media (min-width:1000px){body.specs-open{overflow:auto}}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:100%;background:var(--paper);border-left:1.5px solid var(--ink);display:flex;flex-direction:column;transform:translateX(100%);visibility:hidden;transition:transform .35s ease,visibility 0s linear .35s;z-index:20;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (min-width:640px){.drawer{width:min(520px,100%)}}
+@media (min-width:1000px){.drawer{width:var(--drawer-w)}}
+.drawer.open{transform:none;visibility:visible;transition:transform .35s ease,visibility 0s}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1.5px solid var(--ink)}
+.drawer-head h2{font-stretch:76%;font-weight:800;font-size:24px;line-height:1}
+.close{appearance:none;display:grid;place-items:center;width:36px;height:36px;border:1.5px solid var(--ink);background:var(--paper);cursor:pointer;flex:none}
+.close:hover{background:var(--sel)}
+.drawer-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:16px;display:grid;gap:22px;align-content:start}
+.d-sec{display:grid;gap:12px;min-width:0}
+.d-sec + .d-sec{padding-top:20px;border-top:1px solid var(--line-strong)}
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sec-title h3{font-stretch:80%;font-weight:750;font-size:19px;line-height:1.1}
+.meta{font:500 12px/1.2 var(--f-mono);color:var(--muted)}
+.note{margin:0;color:var(--ink-2);font-size:13.5px}
+
+.rotulo{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1.5px solid var(--ink);background:var(--paper)}
+.rotulo div{padding:8px 11px;border-right:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);min-width:0}
+.rotulo div:nth-child(2n){border-right:0}
+.rotulo div:nth-last-child(-n+2){border-bottom:0}
+.rotulo dt{font:500 10.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.rotulo dd{margin:3px 0 0;font:600 13px/1.25 var(--f-mono);font-variant-numeric:tabular-nums}
+
 .row{display:grid;grid-template-columns:8.6em minmax(0,1fr) 5em;align-items:center;gap:4px 12px}
 .row label,.row .lbl{font-weight:650;font-size:14px}
 .row output{font:600 14px/1 var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
@@ -120,9 +150,6 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
 .row input[type=range]::-moz-range-track{height:4px;background:var(--line)}
 .row input[type=range]::-moz-range-progress{height:4px;background:var(--ink)}
 .row input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:0;background:var(--paper);border:2px solid var(--ink)}
-.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--ink);background:var(--inv-bg);color:var(--inv-fg);font:700 15px/1 var(--f-body);padding:13px 16px;cursor:pointer;width:100%}
-.btn:hover{filter:contrast(1.15)}
-.btn:disabled{opacity:.55;cursor:progress}
 .result{display:grid;gap:4px;padding:12px;border:1.5px solid var(--ink);background:var(--bg)}
 .result[data-kind="miss"]{border-style:dashed}
 .result-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -135,15 +162,13 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
 .kin{margin:6px 0 0;padding-top:8px;border-top:1px solid var(--line-strong);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px}
 .kin dt{font:500 10.5px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .kin dd{margin:2px 0 0;font:600 13.5px/1.2 var(--f-mono);font-variant-numeric:tabular-nums}
+.checks{display:flex;flex-wrap:wrap;gap:8px 18px}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;user-select:none}
+.check input{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin:0;border:1.5px solid var(--ink);background:var(--paper);display:inline-grid;place-items:center;cursor:pointer;flex:none}
+.check input::after{content:"";width:8px;height:8px;background:var(--ink);transform:scale(0);transition:transform .12s}
+.check input:checked::after{transform:scale(1)}
+.check input:disabled{opacity:.5}
 
-/* Registro y matriz */
-.data{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);align-items:start}
-@media (min-width:1000px){.data{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
-.sheet{background:var(--paper);border:1px solid var(--line-strong);padding:16px;display:grid;gap:12px;align-content:start;min-width:0}
-.sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-bottom:8px;border-bottom:1.5px solid var(--ink)}
-.sec-title h2,.sec-title h3{font-stretch:80%;font-weight:750;font-size:20px;line-height:1.1}
-.meta{font:500 12px/1.2 var(--f-mono);color:var(--muted)}
-.note{margin:0;color:var(--ink-2);font-size:13.5px}
 .link-btn{appearance:none;border:0;background:none;padding:0;font:500 12px/1.2 var(--f-mono);color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .link-btn:hover{color:var(--ink)}
 .link-btn:disabled{opacity:.45;cursor:default;text-decoration:none}
@@ -153,8 +178,8 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
 .tbl thead th{font:500 10.5px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--ink);white-space:nowrap}
 .tbl td{font:500 13px/1.3 var(--f-mono)}
 .tbl td.num,.tbl th.num{text-align:right}
-.tbl .empty-row td{font:400 13.5px/1.45 var(--f-body);color:var(--muted);padding:14px 8px}
-.log-wrap{max-height:340px;overflow:auto}
+.log-wrap{max-height:300px;overflow:auto}
+.log-wrap td{white-space:nowrap}
 .tbl-foot{margin:0;font:600 12.5px/1.3 var(--f-mono)}
 .mx th[scope="row"]{font:600 13px/1 var(--f-mono)}
 .mx td{padding:3px}
@@ -163,13 +188,6 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
 .mx-cell:not(.hit){color:var(--muted);border-style:dashed}
 .mx-cell:hover{border-color:var(--ink)}
 .mx-cell[aria-pressed="true"]{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg);border-style:solid}
-
-/* Especificaciones */
-.spec-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-bottom:8px;border-bottom:1.5px solid var(--ink)}
-.spec-head h2{font-stretch:72%;font-weight:800;font-size:clamp(28px,5vw,38px);line-height:1}
-.specs{display:grid;gap:18px}
-.spec-grid{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);align-items:start}
-@media (min-width:1000px){.spec-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .stamp{font:700 11.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;border:1.5px solid var(--ink);padding:5px 8px}
 .meters{list-style:none;margin:0;padding:0;display:grid;gap:16px}
 .m-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px}
@@ -189,8 +207,8 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
 .part-btn{appearance:none;border:0;background:none;padding:0;font:650 14px/1.3 var(--f-body);text-align:left;cursor:pointer;text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px}
 .part-btn:hover{text-decoration-color:var(--ink)}
 .bom tr.on td{background:var(--sel)}
-.bom td.dims{font:500 12.5px/1.35 var(--f-mono);color:var(--ink-2)}
-.plan svg{display:block;width:100%;max-width:420px;height:auto;margin-inline:auto}
+.bom .dims{font:500 12.5px/1.35 var(--f-mono);color:var(--ink-2)}
+.plan svg{display:block;width:100%;max-width:400px;height:auto;margin-inline:auto}
 .cut{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
 .hole{fill:var(--paper);stroke:var(--ink);stroke-width:1.6;transition:fill .25s}
 .hole.aim{stroke-width:3;stroke-dasharray:6 4}
@@ -204,67 +222,76 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
 .score th[scope="row"]{text-align:left;font:650 13.5px/1.3 var(--f-body);text-transform:none;letter-spacing:0;color:var(--ink)}
 .score td{font:600 15px/1 var(--f-mono)}
 .formula{margin:0;padding:10px 12px;border:1px dashed var(--ink);font:500 13px/1.45 var(--f-mono)}
-.assume{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink-2);font-size:14px;max-width:80ch}
-.foot{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;padding-top:16px;border-top:1.5px solid var(--ink);color:var(--muted);font-size:13.5px}
-.foot p{margin:0;max-width:72ch}
-@media (prefers-reduced-motion: reduce){.toast{transition:none}}
+.assume{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink-2);font-size:14px}
+.d-foot{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;color:var(--muted);font-size:13px}
+.d-foot p{margin:0}
+@media (prefers-reduced-motion: reduce){.toast,.drawer,.layout,.scrim{transition:none}}
 </style>
 </head>
 <body>
-<div class="page">
-  <header class="head">
-    <div>
-      <p class="eyebrow">Ficha técnica · catapulta y caja de blancos</p>
-      <h1>Tablero de lanzamientos</h1>
-      <p class="lede">Modelo 3D de las piezas en MDF y simulación del tiro. Cambia el ángulo de salida, la velocidad y la bolita, y lanza para ver dónde cae y cuántos puntos da.</p>
+<div class="layout" id="layout">
+  <div class="page">
+    <header class="top">
+      <div>
+        <p class="eyebrow">Catapulta y caja de blancos · MDF 3 mm</p>
+        <h1>Tablero de lanzamientos</h1>
+      </div>
       <nav class="links" aria-label="Otras versiones">
         <a href="https://miguelin777.github.io/ModeloDeProductoGanador/" target="_blank" rel="noopener">Versión juego</a>
         <a href="https://github.com/miguelin777/ModeloDeProductoGanador" target="_blank" rel="noopener">Código en GitHub</a>
       </nav>
-    </div>
-    <dl class="rotulo" aria-label="Datos del proyecto">
-      <div><dt>Material</dt><dd>MDF 3 mm</dd></div>
-      <div><dt>Unidades</dt><dd>cm</dd></div>
-      <div><dt>Envolvente</dt><dd>30 × 30 × 22.5</dd></div>
-      <div><dt>Tablero</dt><dd>30 × 24.17 · 6 × Ø 6.5</dd></div>
-      <div><dt>Catapulta</dt><dd>10 × 8 × 3</dd></div>
-      <div><dt>Bolitas</dt><dd>Ø 3.5 ×2 · Ø 4 ×3</dd></div>
-    </dl>
-  </header>
+    </header>
 
-  <div class="work">
-    <section class="viewer" aria-labelledby="vTitle">
-      <div class="view-title"><h2 id="vTitle">Modelo 3D</h2><span>caja + catapulta</span></div>
+    <section class="viewer" aria-label="Modelo 3D">
       <div class="stage" id="stage">
         <div class="labels" id="labels"></div>
-        <div class="stage-note" id="stageNote">Previsto <b id="stageNoteText">…</b></div>
+        <div class="stage-note" id="stageNote" hidden>Previsto <b id="stageNoteText">…</b></div>
         <div class="toast" id="toast" role="status" aria-live="polite"></div>
-        <p class="hint" id="hint">Arrastra para girar · rueda para acercar</p>
-        <p class="fallback" id="fallback" hidden>No se pudo cargar el visor 3D en este navegador. La simulación, el registro y las especificaciones siguen funcionando.</p>
+        <p class="hint" id="hint">Arrastra para girar el modelo</p>
+        <p class="fallback" id="fallback" hidden>No se pudo cargar el visor 3D en este navegador. Las especificaciones técnicas siguen disponibles.</p>
       </div>
       <div class="toolbar">
         <div class="tool-group">
-          <div class="seg" role="group" aria-label="Piezas">
+          <div class="seg seg-explode" role="group" aria-label="Piezas">
             <button type="button" id="vArmado" data-explode="0" aria-pressed="true">Armado</button>
             <button type="button" id="vPiezas" data-explode="1" aria-pressed="false">Piezas separadas</button>
           </div>
-          <div class="seg" role="group" aria-label="Cámara">
+          <div class="seg seg-cam" role="group" aria-label="Cámara">
             <button type="button" data-cam="iso" aria-pressed="true">3D</button>
             <button type="button" data-cam="side" aria-pressed="false">Lado</button>
             <button type="button" data-cam="top" aria-pressed="false">Arriba</button>
           </div>
+          <button type="button" class="toggle" id="spin" aria-pressed="true"><svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8A5.5 5.5 0 1 1 11 3.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M11.2 1v2.8H14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Girar</button>
         </div>
-        <div class="checks">
-          <label class="check"><input type="checkbox" id="tDims" checked>Cotas</label>
-          <label class="check"><input type="checkbox" id="tPath" checked>Trayectoria</label>
-          <label class="check"><input type="checkbox" id="tCube">Cubo 30 cm</label>
-          <label class="check"><input type="checkbox" id="tCat" checked>Catapulta</label>
+        <div class="tool-group actions">
+          <button type="button" class="btn" id="launchMain"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 13C3.4 6.6 7.6 3.2 13 3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.4 1.6 13.2 3.6 11.2 6.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Lanzar</span></button>
+          <button type="button" class="btn primary" id="specsBtn" aria-expanded="false" aria-controls="specs"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3z M10 2.5v3h3 M5.5 8.5h5 M5.5 11h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="btn-label">Ver especificaciones técnicas</span></button>
         </div>
       </div>
     </section>
+  </div>
+</div>
 
-    <aside class="panel" aria-labelledby="sTitle">
-      <h2 id="sTitle">Simulación del tiro</h2>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="specs" aria-labelledby="specsTitle" aria-hidden="true">
+  <div class="drawer-head">
+    <h2 id="specsTitle" tabindex="-1">Especificaciones técnicas</h2>
+    <button type="button" class="close" id="specsClose" aria-label="Cerrar especificaciones"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2 2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+  </div>
+  <div class="drawer-body">
+    <section class="d-sec" aria-label="Datos del proyecto">
+      <dl class="rotulo">
+        <div><dt>Material</dt><dd>MDF 3 mm</dd></div>
+        <div><dt>Unidades</dt><dd>cm</dd></div>
+        <div><dt>Envolvente</dt><dd>30 × 30 × 22.5</dd></div>
+        <div><dt>Tablero</dt><dd>30 × 24.17 · 6 × Ø 6.5</dd></div>
+        <div><dt>Catapulta</dt><dd>10 × 8 × 3</dd></div>
+        <div><dt>Bolitas</dt><dd>Ø 3.5 ×2 · Ø 4 ×3</dd></div>
+      </dl>
+    </section>
+
+    <section class="d-sec" aria-labelledby="sTitle">
+      <div class="sec-title"><h3 id="sTitle">Simulación del tiro</h3></div>
       <div class="row">
         <label for="alpha">Ángulo de salida</label>
         <input type="range" id="alpha" min="20" max="85" step="1" value="60">
@@ -292,7 +319,7 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
           <button type="button" data-col="-1" aria-pressed="false">Derecha</button>
         </div>
       </div>
-      <button type="button" class="btn" id="launch"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 13C3.4 6.6 7.6 3.2 13 3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.4 1.6 13.2 3.6 11.2 6.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Lanzar</span></button>
+      <button type="button" class="btn primary wide" id="launch"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 13C3.4 6.6 7.6 3.2 13 3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10.4 1.6 13.2 3.6 11.2 6.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Lanzar</span></button>
       <div class="result" id="result" data-kind="hole">
         <div class="result-top"><span class="result-label">Resultado previsto</span><span class="tag" id="resTag">Acierto</span></div>
         <span class="result-value" id="resValue">…</span>
@@ -305,12 +332,20 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
           <div><dt>Freno del brazo</dt><dd id="kArm">–</dd></div>
         </dl>
       </div>
-    </aside>
-  </div>
+    </section>
 
-  <div class="data">
-    <section class="sheet" aria-labelledby="logTitle">
-      <div class="sec-title"><h2 id="logTitle">Registro de lanzamientos</h2><button type="button" class="link-btn" id="clearLog" disabled>Borrar registro</button></div>
+    <section class="d-sec" aria-labelledby="mTitle">
+      <div class="sec-title"><h3 id="mTitle">En el modelo</h3></div>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="tDims" checked>Cotas</label>
+        <label class="check"><input type="checkbox" id="tPath" checked>Trayectoria</label>
+        <label class="check"><input type="checkbox" id="tCube">Cubo 30 cm</label>
+        <label class="check"><input type="checkbox" id="tCat" checked>Catapulta</label>
+      </div>
+    </section>
+
+    <section class="d-sec" aria-labelledby="logTitle">
+      <div class="sec-title"><h3 id="logTitle">Registro de lanzamientos</h3><button type="button" class="link-btn" id="clearLog" disabled>Borrar registro</button></div>
       <p class="note" id="logEmpty">Todavía no hay tiros. Cada vez que uses «Lanzar» se agrega una fila con su resultado.</p>
       <div class="table-wrap log-wrap" id="logWrap" hidden>
         <table class="tbl">
@@ -321,8 +356,8 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       <p class="tbl-foot" id="logSum" hidden></p>
     </section>
 
-    <section class="sheet" aria-labelledby="mxTitle">
-      <div class="sec-title"><h2 id="mxTitle">Predicción por factores</h2><span class="meta" id="mxMeta"></span></div>
+    <section class="d-sec" aria-labelledby="mxTitle">
+      <div class="sec-title"><h3 id="mxTitle">Predicción por factores</h3><span class="meta" id="mxMeta"></span></div>
       <p class="note">Ángulo de salida × tamaño de bolita, con la velocidad y la columna de la simulación. Toca una celda para cargarla.</p>
       <div class="table-wrap">
         <table class="tbl mx">
@@ -331,53 +366,49 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
         </table>
       </div>
     </section>
-  </div>
 
-  <section class="specs" aria-labelledby="specTitle">
-    <div class="spec-head"><h2 id="specTitle">Especificaciones</h2><span class="meta">MDF 3 mm · medidas exteriores en cm</span></div>
-    <div class="spec-grid">
-      <article class="sheet" aria-labelledby="fitTitle">
-        <div class="sec-title"><h3 id="fitTitle">Envolvente de 30 cm</h3><span class="stamp">Cumple</span></div>
-        <ul class="meters">
-          <li>
-            <div class="m-top"><span class="m-name">Largo</span><span class="m-val">8 + 22 = <b>30</b> / 30</span></div>
-            <div class="bar" role="img" aria-label="Largo: catapulta 8 cm más caja 22 cm, 30 de 30 cm"><span class="s-a" style="width:26.667%"></span><span class="s-b" style="width:73.333%"></span></div>
-            <div class="m-legend"><span><i class="k-a"></i>catapulta 8</span><span><i class="k-b"></i>caja 22</span></div>
-          </li>
-          <li>
-            <div class="m-top"><span class="m-name">Ancho</span><span class="m-val"><b>30</b> / 30</span></div>
-            <div class="bar" role="img" aria-label="Ancho: caja 30 de 30 cm"><span class="s-b" style="width:100%"></span></div>
-            <div class="m-legend"><span>la catapulta (10) va enfrente de la caja</span></div>
-          </li>
-          <li>
-            <div class="m-top"><span class="m-name">Alto</span><span class="m-val"><b>22.5</b> / 30</span></div>
-            <div class="bar" role="img" aria-label="Alto: respaldo 22.5 de 30 cm"><span class="s-b" style="width:75%"></span></div>
-            <div class="m-legend"><span>lo más alto es el respaldo · sobran 7.5</span></div>
-          </li>
-        </ul>
-      </article>
+    <section class="d-sec" aria-labelledby="fitTitle">
+      <div class="sec-title"><h3 id="fitTitle">Envolvente de 30 cm</h3><span class="stamp">Cumple</span></div>
+      <ul class="meters">
+        <li>
+          <div class="m-top"><span class="m-name">Largo</span><span class="m-val">8 + 22 = <b>30</b> / 30</span></div>
+          <div class="bar" role="img" aria-label="Largo: catapulta 8 cm más caja 22 cm, 30 de 30 cm"><span class="s-a" style="width:26.667%"></span><span class="s-b" style="width:73.333%"></span></div>
+          <div class="m-legend"><span><i class="k-a"></i>catapulta 8</span><span><i class="k-b"></i>caja 22</span></div>
+        </li>
+        <li>
+          <div class="m-top"><span class="m-name">Ancho</span><span class="m-val"><b>30</b> / 30</span></div>
+          <div class="bar" role="img" aria-label="Ancho: caja 30 de 30 cm"><span class="s-b" style="width:100%"></span></div>
+          <div class="m-legend"><span>la catapulta (10) va enfrente de la caja</span></div>
+        </li>
+        <li>
+          <div class="m-top"><span class="m-name">Alto</span><span class="m-val"><b>22.5</b> / 30</span></div>
+          <div class="bar" role="img" aria-label="Alto: respaldo 22.5 de 30 cm"><span class="s-b" style="width:75%"></span></div>
+          <div class="m-legend"><span>lo más alto es el respaldo · sobran 7.5</span></div>
+        </li>
+      </ul>
+    </section>
 
-      <article class="sheet" aria-labelledby="bomTitle">
-        <div class="sec-title"><h3 id="bomTitle">Lista de piezas</h3><span class="meta">toca una pieza para verla</span></div>
-        <div class="table-wrap">
-          <table class="tbl bom">
-            <thead><tr><th scope="col">No.</th><th scope="col">Pieza y medidas</th><th scope="col" class="num">Cant.</th></tr></thead>
-            <tbody>
-              <tr data-row="tablero"><td>1</td><td><button type="button" class="part-btn" data-part="tablero" aria-pressed="false">Tablero con hoyos</button><br><span class="dims">30 × 24.17 · 6 hoyos Ø 6.5</span></td><td class="num">1</td></tr>
-              <tr data-row="base"><td>2</td><td><button type="button" class="part-btn" data-part="base" aria-pressed="false">Base</button><br><span class="dims">30 × 22</span></td><td class="num">1</td></tr>
-              <tr data-row="frente"><td>3</td><td><button type="button" class="part-btn" data-part="frente" aria-pressed="false">Frente</button><br><span class="dims">30 × 4.5</span></td><td class="num">1</td></tr>
-              <tr data-row="respaldo"><td>4</td><td><button type="button" class="part-btn" data-part="respaldo" aria-pressed="false">Respaldo</button><br><span class="dims">30 × 22.5</span></td><td class="num">1</td></tr>
-              <tr data-row="laterales"><td>5</td><td><button type="button" class="part-btn" data-part="laterales" aria-pressed="false">Lateral</button><br><span class="dims">22 de largo · 4.5 → 14.5 de alto</span></td><td class="num">2</td></tr>
-              <tr data-row="catapulta"><td>6</td><td><button type="button" class="part-btn" data-part="catapulta" aria-pressed="false">Cuerpo de la catapulta</button><br><span class="dims">10 × 8 × 3 · el brazo es de referencia</span></td><td class="num">1</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </article>
+    <section class="d-sec" aria-labelledby="bomTitle">
+      <div class="sec-title"><h3 id="bomTitle">Lista de piezas</h3><span class="meta">toca una pieza para verla</span></div>
+      <div class="table-wrap">
+        <table class="tbl bom">
+          <thead><tr><th scope="col">No.</th><th scope="col">Pieza y medidas (cm)</th><th scope="col" class="num">Cant.</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><button type="button" class="part-btn" data-part="tablero" aria-pressed="false">Tablero con hoyos</button><br><span class="dims">30 × 24.17 · 6 hoyos Ø 6.5</span></td><td class="num">1</td></tr>
+            <tr><td>2</td><td><button type="button" class="part-btn" data-part="base" aria-pressed="false">Base</button><br><span class="dims">30 × 22</span></td><td class="num">1</td></tr>
+            <tr><td>3</td><td><button type="button" class="part-btn" data-part="frente" aria-pressed="false">Frente</button><br><span class="dims">30 × 4.5</span></td><td class="num">1</td></tr>
+            <tr><td>4</td><td><button type="button" class="part-btn" data-part="respaldo" aria-pressed="false">Respaldo</button><br><span class="dims">30 × 22.5</span></td><td class="num">1</td></tr>
+            <tr><td>5</td><td><button type="button" class="part-btn" data-part="laterales" aria-pressed="false">Lateral</button><br><span class="dims">22 de largo · 4.5 → 14.5 de alto</span></td><td class="num">2</td></tr>
+            <tr><td>6</td><td><button type="button" class="part-btn" data-part="catapulta" aria-pressed="false">Cuerpo de la catapulta</button><br><span class="dims">10 × 8 × 3 · el brazo es de referencia</span></td><td class="num">1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-      <article class="sheet" aria-labelledby="planTitle">
-        <div class="sec-title"><h3 id="planTitle">Plano del tablero y puntuación</h3><span class="meta">pieza 1</span></div>
-        <div class="plan">
-          <svg viewBox="0 0 390 322" role="img" aria-label="Plano del tablero de 30 por 24.17 centímetros con seis hoyos de 6.5 centímetros. Arriba valen 11, 9 y 10 y abajo 8, 6 y 7">
+    <section class="d-sec" aria-labelledby="planTitle">
+      <div class="sec-title"><h3 id="planTitle">Plano del tablero y puntuación</h3><span class="meta">pieza 1</span></div>
+      <div class="plan">
+        <svg viewBox="0 0 390 322" role="img" aria-label="Plano del tablero de 30 por 24.17 centímetros con seis hoyos de 6.5 centímetros. Arriba valen 11, 9 y 10 y abajo 8, 6 y 7">
             <path class="dl" d="M50 18v12M350 18v12M50 24H350"/>
             <text class="dt" x="200" y="14" text-anchor="middle">30</text>
             <path class="dl" d="M362 40h12M362 281.7h12M368 40V281.7"/>
@@ -404,37 +435,36 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
             <text class="dt" x="350" y="297.7" text-anchor="end">6 hoyos Ø 6.5</text>
             <text class="front" x="200" y="316" text-anchor="middle">FRENTE · LADO DE LA CATAPULTA</text>
           </svg>
-        </div>
-        <div class="table-wrap">
-          <table class="tbl score">
-            <thead><tr><th scope="col">Fila</th><th scope="col">Izquierda</th><th scope="col">Centro</th><th scope="col">Derecha</th></tr></thead>
-            <tbody>
-              <tr><th scope="row">Arriba</th><td>11</td><td>9</td><td>10</td></tr>
-              <tr><th scope="row">Abajo</th><td>8</td><td>6</td><td>7</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="formula">Puntos del tiro = valor del hoyo × multiplicador<br>Bolita Ø 3.5 cm: ×2 · Bolita Ø 4 cm: ×3<br>Por acierto: de 12 a 33 puntos</p>
-      </article>
-    </div>
-  </section>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl score">
+          <thead><tr><th scope="col">Fila</th><th scope="col">Izquierda</th><th scope="col">Centro</th><th scope="col">Derecha</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Arriba</th><td>11</td><td>9</td><td>10</td></tr>
+            <tr><th scope="row">Abajo</th><td>8</td><td>6</td><td>7</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="formula">Puntos del tiro = valor del hoyo × multiplicador<br>Bolita Ø 3.5 cm: ×2 · Bolita Ø 4 cm: ×3<br>Por acierto: de 12 a 33 puntos</p>
+    </section>
 
-  <section class="sheet" aria-labelledby="assumeTitle">
-    <div class="sec-title"><h2 id="assumeTitle">Supuestos de la simulación</h2></div>
-    <ul class="assume">
-      <li>Tiro parabólico desde la copa de la catapulta con g = 9.81 m/s². No se toma en cuenta el aire.</li>
-      <li>El brazo gira hasta quedar perpendicular a la salida: se frena a 90° menos el ángulo de salida.</li>
-      <li>La bolita entra al hoyo cuando su centro queda dentro del círculo de 6.5 cm.</li>
-      <li>Si cae en el tablero, rueda hacia abajo sin resbalar hasta un hoyo o hasta salirse por el frente. No hay rebotes.</li>
-      <li>La salida por el lateral izquierdo se muestra solo para enseñar cómo regresa la bolita a la catapulta.</li>
-    </ul>
-  </section>
+    <section class="d-sec" aria-labelledby="assumeTitle">
+      <div class="sec-title"><h3 id="assumeTitle">Supuestos de la simulación</h3></div>
+      <ul class="assume">
+        <li>Tiro parabólico desde la copa de la catapulta con g = 9.81 m/s². No se toma en cuenta el aire.</li>
+        <li>El brazo gira hasta quedar perpendicular a la salida: se frena a 90° menos el ángulo de salida.</li>
+        <li>La bolita entra al hoyo cuando su centro queda dentro del círculo de 6.5 cm.</li>
+        <li>Si cae en el tablero, rueda hacia abajo sin resbalar hasta un hoyo o hasta salirse por el frente. No hay rebotes.</li>
+        <li>La salida por el lateral izquierdo se muestra solo para enseñar cómo regresa la bolita a la catapulta.</li>
+      </ul>
+    </section>
 
-  <footer class="foot">
-    <p>Medidas exteriores en MDF de 3 mm. Los resultados son una predicción del modelo para comparar con las pruebas reales.</p>
-    <p class="mono">13/10/2026</p>
-  </footer>
-</div>
+    <section class="d-sec d-foot" aria-label="Notas">
+      <p>Medidas exteriores en MDF de 3 mm. Los resultados son una predicción del modelo para comparar con las pruebas reales.</p>
+      <p class="mono">13/10/2026</p>
+    </section>
+  </div>
+</aside>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -463,19 +493,24 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
   const $ = (s) => document.querySelector(s);
   const f1 = (n) => (Math.round(n * 10) / 10).toFixed(1);
   const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const wideMq = window.matchMedia ? window.matchMedia('(min-width: 1000px)') : null;
+  const isWide = () => !!(wideMq && wideMq.matches);
 
   const stage = $('#stage'), labelsEl = $('#labels'), hintEl = $('#hint'), toastEl = $('#toast');
-  const launchBtn = $('#launch'), launchLabel = launchBtn.querySelector('.btn-label');
+  const coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  hintEl.textContent = coarse ? 'Arrastra para girar · pellizca para acercar' : 'Arrastra para girar · rueda para acercar';
+  const launchBtns = [$('#launch'), $('#launchMain')];
   const alphaIn = $('#alpha'), alphaOut = $('#alphaOut');
   const speedIn = $('#speed'), speedOut = $('#speedOut');
   const sliders = [alphaIn, speedIn];
   const ballBtns = document.querySelectorAll('[data-ball]'), colBtns = document.querySelectorAll('[data-col]');
   const resEl = $('#result'), resTag = $('#resTag'), resValue = $('#resValue'), resPts = $('#resPts'), resDetail = $('#resDetail');
   const kFlight = $('#kFlight'), kHeight = $('#kHeight'), kRun = $('#kRun'), kArm = $('#kArm');
-  const stageNoteText = $('#stageNoteText');
+  const stageNote = $('#stageNote'), stageNoteText = $('#stageNoteText');
   const holeEls = document.querySelectorAll('.hole');
   const mxBody = $('#mxBody'), mxMeta = $('#mxMeta');
   const logBody = $('#logBody'), logSum = $('#logSum'), clearLogBtn = $('#clearLog'), logEmpty = $('#logEmpty'), logWrap = $('#logWrap');
+  const specs = $('#specs'), specsBtn = $('#specsBtn'), specsBtnLabel = specsBtn.querySelector('.btn-label'), specsClose = $('#specsClose'), scrim = $('#scrim');
 
   const state = { alpha: 60 * DEG, v: 150, ball: 's', r: BALLS.s.d / 2, col: '0', xc: 0, theta: THETA };
 
@@ -638,6 +673,27 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
     return { t: s.pts[n - 1][0], h: top, run: s.pts[n - 1][3] - s.pts[0][3] };
   }
 
+  // ---------- Panel de especificaciones ----------
+  let specsOpen = false;
+  function setSpecs(open, silent) {
+    if (open === specsOpen) return;
+    specsOpen = open;
+    specs.classList.toggle('open', open);
+    specs.setAttribute('aria-hidden', String(!open));
+    if ('inert' in specs) specs.inert = !open;
+    document.body.classList.toggle('specs-open', open);
+    specsBtn.setAttribute('aria-expanded', String(open));
+    specsBtnLabel.textContent = open ? 'Ocultar especificaciones' : 'Ver especificaciones técnicas';
+    stageNote.hidden = !open;
+    if (open) setTimeout(() => { try { $('#specsTitle').focus({ preventScroll: true }); } catch (e) { /* sin foco */ } }, 60);
+    else if (!silent) { try { specsBtn.focus({ preventScroll: true }); } catch (e) { /* sin foco */ } }
+  }
+  if ('inert' in specs) specs.inert = true;
+  specsBtn.addEventListener('click', () => setSpecs(!specsOpen));
+  specsClose.addEventListener('click', () => setSpecs(false));
+  scrim.addEventListener('click', () => setSpecs(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && specsOpen) setSpecs(false); });
+
   // ---------- Controles ----------
   let sim = null;
   const hooks = [];
@@ -671,7 +727,8 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
   // Predicción por factores: ángulo × bolita con la velocidad y la columna actuales
   function renderMatrix() {
     mxMeta.textContent = (+speedIn.value).toFixed(2) + ' m/s · ' + COL_NAME[state.col].toLowerCase();
-    const focused = document.activeElement && document.activeElement.classList.contains('mx-cell') ? document.activeElement.dataset.a + document.activeElement.dataset.b : null;
+    const ae = document.activeElement;
+    const focused = ae && ae.classList && ae.classList.contains('mx-cell') ? [ae.dataset.a, ae.dataset.b] : null;
     mxBody.innerHTML = ANGLES.map((a) => {
       const cells = ['s', 'b'].map((b) => {
         const s = simulate({ alpha: a * DEG, v: state.v, r: BALLS[b].d / 2, xc: state.xc, theta: THETA });
@@ -682,7 +739,7 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       return '<tr><th scope="row">' + a + '°</th>' + cells + '</tr>';
     }).join('');
     if (focused) {
-      const again = mxBody.querySelector('[data-a="' + focused.slice(0, -1) + '"][data-b="' + focused.slice(-1) + '"]');
+      const again = mxBody.querySelector('[data-a="' + focused[0] + '"][data-b="' + focused[1] + '"]');
       if (again) again.focus();
     }
   }
@@ -718,8 +775,8 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
   function fail() {
     $('#fallback').hidden = false;
     hintEl.hidden = true;
-    launchBtn.disabled = true;
-    document.querySelectorAll('[data-explode],[data-cam],#tDims,#tPath,#tCube,#tCat').forEach((el) => { el.disabled = true; });
+    launchBtns.forEach((b) => { b.disabled = true; });
+    document.querySelectorAll('[data-explode],[data-cam],#spin,#tDims,#tPath,#tCube,#tCat').forEach((el) => { el.disabled = true; });
   }
 
   try { init3D(); } catch (err) { if (window.console) console.error(err); fail(); }
@@ -747,11 +804,23 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.minDistance = 25;
-    controls.maxDistance = 190;
+    controls.maxDistance = 260;
     controls.maxPolarAngle = Math.PI * 0.48;
+    controls.autoRotateSpeed = 1.1;
     controls.update();
-    let userMoved = false, camAnim = null;
-    controls.addEventListener('start', () => { userMoved = true; camAnim = null; hintEl.hidden = true; setCamButtons(null); });
+    // autoFrame: la cámara ajusta sola su distancia (pantalla angosta, piezas separadas) hasta que la persona hace zoom
+    let autoFrame = true, camName = 'iso', camAnim = null, dragging = false, distAtStart = 0, lastInteract = performance.now(), spin = !reduceMotion;
+    // Tiro de muestra: al terminar de armarse, la catapulta lanza una vez sola (no cuenta en el registro)
+    let demoPending = !reduceMotion, demoAt = null;
+    controls.addEventListener('start', () => {
+      dragging = true; camAnim = null; demoPending = false; lastInteract = performance.now();
+      distAtStart = camera.position.distanceTo(controls.target);
+      hintEl.hidden = true; setCamButtons(null);
+    });
+    controls.addEventListener('end', () => {
+      dragging = false; lastInteract = performance.now();
+      if (Math.abs(camera.position.distanceTo(controls.target) - distAtStart) > 0.5) autoFrame = false;
+    });
 
     scene.add(new THREE.HemisphereLight(0xffffff, 0xb9bbb6, 0.72));
     const sunL = new THREE.DirectionalLight(0xffffff, 0.55);
@@ -769,7 +838,7 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
     tileC.width = tileC.height = 200;
     const matTex = new THREE.CanvasTexture(tileC);
     matTex.wrapS = matTex.wrapT = THREE.RepeatWrapping;
-    matTex.repeat.set(60, 60);
+    matTex.repeat.set(240, 240);
     matTex.anisotropy = maxAniso;
     function drawMat(base, line) {
       const g = tileC.getContext('2d');
@@ -784,7 +853,7 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       g.globalAlpha = 1;
       matTex.needsUpdate = true;
     }
-    const ground = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), new THREE.MeshStandardMaterial({ map: matTex, roughness: 1, metalness: 0 }));
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), new THREE.MeshStandardMaterial({ map: matTex, roughness: 1, metalness: 0 }));
     ground.rotation.x = -Math.PI / 2;
     ground.position.y = -0.01;
     ground.receiveShadow = true;
@@ -853,38 +922,39 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       edges(m);
       return m;
     }
-    function sub(p, off) {
+    // Cada pieza se arma en su turno: frente, laterales, respaldo, tablero y al final la catapulta
+    function sub(p, off, win) {
       const g = new THREE.Group();
       p.node.add(g);
-      explode.push({ obj: g, off: new THREE.Vector3(off[0], off[1], off[2]) });
+      explode.push({ obj: g, off: new THREE.Vector3(off[0], off[1], off[2]), lo: win[0], hi: win[1] });
       return g;
     }
 
     const PLM = PL - 0.25;
     const pBase = part('base');
-    const baseMove = sub(pBase, [0, 0, 0]);
+    const baseMove = sub(pBase, [0, 0, 0], [0, 1]);
     mesh(pBase, flatPlate(W - 2 * T, D - 2 * T, []), baseMove).position.z = -D / 2 + T;
     const pTab = part('tablero');
-    const tabMove = sub(pTab, [0, 11, 0]);
+    const tabMove = sub(pTab, [0, 11, 0], [0.14, 0.52]);
     const tilt = new THREE.Group();
     tilt.position.set(0, HF, -D / 2);
     tilt.rotation.x = -THETA;
     tabMove.add(tilt);
     mesh(pTab, flatPlate(W, PLM, HOLES), tilt);
     const pFrente = part('frente');
-    const frenteMove = sub(pFrente, [0, 0, -6]);
+    const frenteMove = sub(pFrente, [0, 0, -6], [0.62, 1]);
     mesh(pFrente, panelGeo(W - 2 * T, HF, null), frenteMove).position.set(0, 0, -D / 2);
     const pRes = part('respaldo');
-    const resMove = sub(pRes, [0, 0, 7]);
+    const resMove = sub(pRes, [0, 0, 7], [0.3, 0.68]);
     mesh(pRes, panelGeo(W - 2 * T, HB, { a: 3.5, r: 1.5, cy: HB - 3.5 }), resMove).position.set(0, 0, D / 2 - T);
     const pLat = part('laterales');
-    const latR = sub(pLat, [8, 0, 0]), latL = sub(pLat, [-8, 0, 0]);
+    const latR = sub(pLat, [8, 0, 0], [0.46, 0.84]), latL = sub(pLat, [-8, 0, 0], [0.46, 0.84]);
     mesh(pLat, sideGeo(false), latR).position.set(W / 2, 0, -D / 2);
     mesh(pLat, sideGeo(true), latL).position.set(-W / 2 + T, 0, -D / 2);
 
     // Catapulta
     const pCat = part('catapulta');
-    const catMove = sub(pCat, [0, 0, -12]);
+    const catMove = sub(pCat, [0, 0, -12], [0, 0.38]);
     const cat = new THREE.Group();
     cat.position.set(state.xc, 0, CAT_Z);
     catMove.add(cat);
@@ -1002,9 +1072,9 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
     cubeLines.computeLineDistances();
     cubeGroup.add(cubeLines);
 
-    // Cotas, números de pieza y etiqueta del cubo
+    // Cotas, números de pieza y etiqueta del cubo (solo con las especificaciones abiertas)
     const anchors = [], dimLines = [];
-    let showDims = true, showCube = false, showPath = true;
+    let dimsOn = true, cubeOn = false, showPath = true;
     const dimMat = new THREE.LineBasicMaterial();
     inkMats.push(dimMat);
     function addLabel(text, parent, x, y, z, kind, cls) {
@@ -1048,21 +1118,59 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
     addLabel('6', cat, CAT_W / 2 + 1.4, CAT_H + 0.8, -CAT_L / 2 + 1, 'part', 'balloon');
 
     const pv = new THREE.Vector3();
-    let explodeTarget = 0, explodeNow = 0, explodeEase = 8;
+    let explodeTarget = 0, explodeNow = reduceMotion ? 0 : 1;
+    function applyExplode() {
+      for (let i = 0; i < explode.length; i++) {
+        const e = explode[i];
+        let f = (explodeNow - e.lo) / (e.hi - e.lo);
+        f = Math.min(1, Math.max(0, f));
+        e.obj.position.copy(e.off).multiplyScalar(f * f * (3 - 2 * f));
+      }
+    }
+    applyExplode();
     function shown(o) { while (o) { if (!o.visible) return false; o = o.parent; } return true; }
+    // Primero los números de pieza, luego las cotas; si una etiqueta se encima con otra (o con los letreros del visor), no se muestra
+    const labelOrder = ['part', 'dims', 'cube'].reduce((list, k) => list.concat(anchors.filter((a) => a.kind === k)), []);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { anchors.forEach((a) => { a.w = 0; }); });
+    let stageW = 1, stageH = 1;
+    const boxOf = (el) => ({ x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight });
+    function bumps(list, r) {
+      for (let i = 0; i < list.length; i++) {
+        const q = list[i];
+        if (r.x < q.x + q.w + 4 && q.x < r.x + r.w + 4 && r.y < q.y + q.h + 4 && q.y < r.y + r.h + 4) return true;
+      }
+      return false;
+    }
     function updateLabels() {
-      const w = stage.clientWidth, h = stage.clientHeight;
-      dimLines.forEach((l) => { l.visible = showDims; });
-      for (let i = 0; i < anchors.length; i++) {
-        const a = anchors[i];
-        let vis = (a.kind === 'cube' ? showCube : a.kind === 'part' ? explodeNow > 0.55 : showDims) && shown(a.o);
+      const dimsVis = specsOpen && dimsOn;
+      dimLines.forEach((l) => { l.visible = dimsVis; });
+      const taken = [];
+      if (specsOpen) {
+        if (!stageNote.hidden) taken.push(boxOf(stageNote));
+        if (!hintEl.hidden) taken.push(boxOf(hintEl));
+      }
+      for (let i = 0; i < labelOrder.length; i++) {
+        const a = labelOrder[i];
+        let vis = (a.kind === 'cube' ? specsOpen && cubeOn : a.kind === 'part' ? specsOpen && explodeNow > 0.9 : dimsVis) && shown(a.o);
+        let x = 0, y = 0;
         if (vis) {
           a.o.getWorldPosition(pv);
           pv.project(camera);
           vis = pv.z > -1 && pv.z < 1 && Math.abs(pv.x) < 1.1 && Math.abs(pv.y) < 1.1;
+          x = (pv.x + 1) / 2 * stageW;
+          y = (1 - pv.y) / 2 * stageH;
+        }
+        if (vis) {
+          if (!a.w) {
+            a.el.hidden = false; a.vis = true;
+            a.w = a.el.firstChild.offsetWidth; a.h = a.el.firstChild.offsetHeight;
+          }
+          const r = { x: x - a.w / 2, y: y - a.h / 2, w: a.w, h: a.h };
+          if (bumps(taken, r)) vis = false;
+          else taken.push(r);
         }
         if (vis !== a.vis) { a.el.hidden = !vis; a.vis = vis; }
-        if (vis) a.el.style.transform = 'translate(' + ((pv.x + 1) / 2 * w).toFixed(1) + 'px,' + ((1 - pv.y) / 2 * h).toFixed(1) + 'px) translate(-50%,-50%)';
+        if (vis) a.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) translate(-50%,-50%)';
       }
     }
 
@@ -1115,32 +1223,42 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       select(hit ? hit.object.userData.part : null);
     });
 
-    // ---------- Vista, cámara y casillas ----------
-    let shot = null, launching = false;
+    // ---------- Vista, cámara y giro ----------
+    let shot = null, launching = false, launchAt = null;
     const busy = () => !!shot || launching;
     const viewBtns = document.querySelectorAll('[data-explode]');
     function setExplode(v) {
       if (busy() && v) return;
       explodeTarget = v;
-      explodeEase = 8;
       viewBtns.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.explode === v)));
     }
-    viewBtns.forEach((b) => b.addEventListener('click', () => setExplode(+b.dataset.explode)));
+    viewBtns.forEach((b) => b.addEventListener('click', () => { demoPending = false; setExplode(+b.dataset.explode); }));
+    const spinBtn = $('#spin');
+    function setSpin(v) { spin = v; spinBtn.setAttribute('aria-pressed', String(v)); lastInteract = performance.now() - 1500; }
+    setSpin(spin);
+    spinBtn.addEventListener('click', () => setSpin(!spin));
     const camBtns = document.querySelectorAll('[data-cam]');
     function setCamButtons(name) { camBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cam === name))); }
-    function narrow() { return stage.clientWidth / Math.max(1, stage.clientHeight) < 1.2; }
+    // Distancia de la cámara: en pantallas angostas se aleja (curK) para que el modelo quepa a lo ancho aunque esté girando,
+    // y con las piezas separadas se aleja otro 30 % para que se vean todas
+    const CAM_D = camOffset.length();
+    let curK = 1;
+    function frameDist(name) {
+      const e = explodeNow * explodeNow * (3 - 2 * explodeNow);
+      return (name === 'side' ? 74 : name === 'top' ? 98 : CAM_D) * curK * (1 + 0.3 * e);
+    }
     function camPreset(name) {
-      const k = narrow() ? 1.3 : 1;
-      if (name === 'side') return { t: new THREE.Vector3(0, 10, -4), p: new THREE.Vector3(-74 * k, 12, -4) };
-      if (name === 'top') return { t: new THREE.Vector3(0, 0, -4), p: new THREE.Vector3(0, 98 * k, -4.6) };
-      const t = target.clone();
-      if (k > 1) t.y -= 1;
-      return { t: t, p: t.clone().addScaledVector(camOffset, k > 1 ? 1.28 : 1) };
+      const d = frameDist(name);
+      if (name === 'side') return { t: new THREE.Vector3(0, 10, -4), p: new THREE.Vector3(-d, 12, -4) };
+      if (name === 'top') return { t: new THREE.Vector3(0, 0, -4), p: new THREE.Vector3(0, d, -4.6) };
+      return { t: target.clone(), p: target.clone().addScaledVector(camOffset, d / CAM_D) };
     }
     function goCam(name) {
+      camName = name;
+      autoFrame = true;
       const to = camPreset(name);
       setCamButtons(name);
-      userMoved = name !== 'iso';
+      setSpin(name === 'iso' && !reduceMotion);
       if (reduceMotion) { controls.target.copy(to.t); camera.position.copy(to.p); controls.update(); return; }
       camAnim = { t0: performance.now(), fromP: camera.position.clone(), fromT: controls.target.clone(), toP: to.p, toT: to.t };
     }
@@ -1150,8 +1268,8 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       el.addEventListener('change', () => set(el.checked));
       set(el.checked);
     }
-    bindCheck('#tDims', (v) => { showDims = v; });
-    bindCheck('#tCube', (v) => { showCube = v; });
+    bindCheck('#tDims', (v) => { dimsOn = v; });
+    bindCheck('#tCube', (v) => { cubeOn = v; });
     bindCheck('#tPath', (v) => { showPath = v; });
     const catChk = $('#tCat');
     catChk.addEventListener('change', () => {
@@ -1176,34 +1294,41 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2600);
     }
     function setBusy() {
-      launchBtn.disabled = busy();
-      launchLabel.textContent = busy() ? 'Lanzando…' : 'Lanzar';
+      launchBtns.forEach((b) => {
+        b.disabled = busy();
+        b.querySelector('.btn-label').textContent = busy() ? 'Lanzando…' : 'Lanzar';
+      });
     }
-    function launch() {
+    let demoShot = false;
+    function launch(demo) {
       if (busy()) return;
+      demoShot = demo === true;
+      if (!demoShot) demoPending = false;
       launching = true;
       setBusy();
-      let delay = 0;
-      if (explodeTarget !== 0 || explodeNow > 0.02) { setExplode(0); delay = reduceMotion ? 0 : 650; }
+      setExplode(0);
       showCatapult();
+      let delay = 0;
       const rect = stage.getBoundingClientRect();
-      if (rect.bottom < rect.height * 0.4 || rect.top > window.innerHeight - rect.height * 0.4) {
+      if (!demoShot && (rect.bottom < rect.height * 0.4 || rect.top > window.innerHeight - rect.height * 0.4)) {
         stage.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
-        delay = Math.max(delay, reduceMotion ? 0 : 450);
+        delay = reduceMotion ? 0 : 450;
       }
-      setTimeout(() => {
-        cat.position.x = state.xc;
-        shot = {
-          phase: 'swing', t0: performance.now(), sim: sim, from: arm.rotation.x,
-          rec: { a: Math.round(+alphaIn.value), v: (+speedIn.value).toFixed(2), ball: state.ball, col: COL_NAME[state.col] }
-        };
-        launching = false;
-        setBusy();
-      }, delay);
+      launchAt = performance.now() + delay;
     }
-    launchBtn.addEventListener('click', launch);
+    $('#launchMain').addEventListener('click', () => launch());
+    $('#launch').addEventListener('click', () => { if (!isWide()) setSpecs(false, true); launch(); });
+    function startShot(now) {
+      cat.position.x = state.xc;
+      shot = {
+        phase: 'swing', t0: now, sim: sim, from: arm.rotation.x, demo: demoShot,
+        rec: { a: Math.round(+alphaIn.value), v: (+speedIn.value).toFixed(2), ball: state.ball, col: COL_NAME[state.col] }
+      };
+      launching = false;
+      launchAt = null;
+      setBusy();
+    }
 
-    const tmpV = new THREE.Vector3();
     function finishShot(now) {
       const s = shot.sim, sm = summary(s, shot.rec.ball);
       if (s.hole) {
@@ -1212,13 +1337,15 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
         flash.visible = true;
         flashT0 = now;
       }
-      holeEls.forEach((c) => c.classList.toggle('hit', !!s.hole && +c.dataset.hole === s.hole.n));
-      log.push({
-        n: log.length ? log[log.length - 1].n + 1 : 1, a: shot.rec.a, v: shot.rec.v, d: BALLS[shot.rec.ball].d, col: shot.rec.col,
-        res: sm.name, pts: sm.pts, ptsText: sm.hit ? sm.hv + ' × ' + sm.mult + ' = ' + sm.pts : '0'
-      });
-      renderLog();
-      showToast(sm.hit ? sm.name + ' · ' + sm.hv + ' × ' + sm.mult + ' = ' + sm.pts + ' puntos' : sm.name + ' · 0 puntos');
+      if (!shot.demo) {
+        holeEls.forEach((c) => c.classList.toggle('hit', !!s.hole && +c.dataset.hole === s.hole.n));
+        log.push({
+          n: log.length ? log[log.length - 1].n + 1 : 1, a: shot.rec.a, v: shot.rec.v, d: BALLS[shot.rec.ball].d, col: shot.rec.col,
+          res: sm.name, pts: sm.pts, ptsText: sm.hit ? sm.hv + ' × ' + sm.mult + ' = ' + sm.pts : '0'
+        });
+        renderLog();
+        showToast(sm.hit ? sm.name + ' · ' + sm.pts + ' puntos' : sm.name);
+      }
       shot.phase = 'done';
       shot.t0 = now;
     }
@@ -1330,6 +1457,7 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
           ball.rotation.set(0, 0, 0);
           seatBall();
           shot = null;
+          lastInteract = now;
           setBusy();
         }
       }
@@ -1342,13 +1470,17 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      if (!userMoved) {
+      stageW = w; stageH = h;
+      curK = Math.max(1, 1.1 / (w / h));
+      if (!placed) {
+        placed = true;
         const to = camPreset('iso');
         controls.target.copy(to.t);
         camera.position.copy(to.p);
         controls.update();
       }
     }
+    let placed = false;
     if ('ResizeObserver' in window) new ResizeObserver(resize).observe(stage);
     else window.addEventListener('resize', resize);
     resize();
@@ -1360,12 +1492,23 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       requestAnimationFrame(frame);
       const dt = Math.min(0.1, Math.max(0, (now - last) / 1000));
       last = now;
-      if (!onScreen && !shot && !camAnim) return;
+      if (!onScreen && !shot && !launching && !camAnim) return;
       if (explodeNow !== explodeTarget) {
-        explodeNow = reduceMotion ? explodeTarget : explodeNow + (explodeTarget - explodeNow) * (1 - Math.exp(-explodeEase * dt));
-        if (Math.abs(explodeTarget - explodeNow) < 0.002) explodeNow = explodeTarget;
-        for (let i = 0; i < explode.length; i++) explode[i].obj.position.copy(explode[i].off).multiplyScalar(explodeNow);
+        if (reduceMotion) explodeNow = explodeTarget;
+        else {
+          const step = dt / 2.2;
+          explodeNow = explodeTarget > explodeNow ? Math.min(explodeTarget, explodeNow + step) : Math.max(explodeTarget, explodeNow - step);
+        }
+        applyExplode();
       }
+      if (demoPending && explodeNow === 0 && explodeTarget === 0) {
+        if (demoAt === null) demoAt = now + 600;
+        else if (now >= demoAt) {
+          demoPending = false;
+          if (!busy() && !(specsOpen && !isWide())) launch(true);
+        }
+      }
+      if (launching && launchAt !== null && now >= launchAt && explodeNow === 0) startShot(now);
       const free = !shot && !launching;
       if (free) {
         cat.position.x += (state.xc - cat.position.x) * (reduceMotion ? 1 : 1 - Math.exp(-11 * dt));
@@ -1377,7 +1520,7 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
       landMark.visible = pathOn;
       aimRing.visible = pathOn && !!sim.hole;
       ghost.visible = showPath && free && assembled && catMove.visible;
-      cubeGroup.visible = showCube && explodeNow < 0.98;
+      cubeGroup.visible = specsOpen && cubeOn && explodeNow < 0.98;
       cubeMat.opacity = 0.75 * (1 - explodeNow);
       stepShot(now);
       stepFlash(now);
@@ -1387,8 +1530,17 @@ h1{font-stretch:72%;font-weight:800;font-size:clamp(40px,9vw,74px);line-height:.
         camera.position.lerpVectors(camAnim.fromP, camAnim.toP, e);
         controls.target.lerpVectors(camAnim.fromT, camAnim.toT, e);
         if (k >= 1) camAnim = null;
+      } else if (autoFrame && !dragging) {
+        // Mismo ángulo (aunque esté girando); solo se acerca o se aleja poco a poco
+        const want = frameDist(camName), cur = camera.position.distanceTo(controls.target);
+        if (Math.abs(want - cur) > 0.01) camera.position.sub(controls.target).setLength(reduceMotion ? want : cur + (want - cur) * (1 - Math.exp(-4 * dt))).add(controls.target);
       }
+      controls.autoRotate = spin && !dragging && !shot && !launching && !demoPending && !camAnim && explodeNow === explodeTarget && now - lastInteract > 2500;
       controls.update();
+      // La niebla empieza detrás del modelo, a la distancia que tenga la cámara
+      const camD = camera.position.distanceTo(controls.target);
+      scene.fog.near = camD + 90;
+      scene.fog.far = camD + 420;
       renderer.render(scene, camera);
       updateLabels();
     }

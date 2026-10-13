@@ -6,7 +6,7 @@ Jueguito en 3D de la catapulta y la caja de blancos del proyecto (MDF de 3 mm, c
 
 **Juego:** https://miguelin777.github.io/ModeloDeProductoGanador/
 
-**Ficha técnica:** https://miguelin777.github.io/ModeloDeProductoGanador/tecnico.html (versión en blanco y negro con la simulación, el registro de lanzamientos, la predicción por factores y las especificaciones)
+**Ficha técnica:** https://miguelin777.github.io/ModeloDeProductoGanador/tecnico.html (versión en blanco y negro: el modelo 3D se arma, lanza y gira solo y se puede mover; con «Ver especificaciones técnicas» se abren las medidas, la simulación, el registro de lanzamientos, la predicción por factores y la lista de piezas)
 
 - Jala la resortera y suelta: 5 tiros, estrellas y récord.
 - Puntos por hoyo: arriba 11, 9 y 10; abajo 8, 6 y 7.
