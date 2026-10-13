@@ -566,8 +566,8 @@ h2{font-family:var(--f-display);font-stretch:85%;font-weight:750;font-size:21px;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(36, 1, 1, 800);
-  const target = new THREE.Vector3(0, 9, -4);
-  camera.position.set(target.x + 30, target.y + 46, target.z - 62);
+  const target = new THREE.Vector3(0, 10, -4);
+  camera.position.set(target.x + 34, target.y + 52, target.z - 71);
   const controls = new THREE.OrbitControls(camera, canvas);
   controls.target.copy(target);
   controls.enableDamping = true;
